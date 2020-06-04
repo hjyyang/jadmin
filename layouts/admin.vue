@@ -1,5 +1,5 @@
 <template>
-  <div id="default_layout">
+  <div id="admin_layout">
     <nuxt />
   </div>
 </template>
