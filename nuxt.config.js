@@ -47,6 +47,6 @@ module.exports = {
     extend(config, ctx) {}
   },
   server: {
-    port: 1010
+    port: 8080
   }
 };
