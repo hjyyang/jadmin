@@ -12,14 +12,11 @@ const router = new Router({
   prefix: "/j_api/user"
 });
 
-router.post("/login", async ctx => {
-  let { u_name, u_pw } = ctx.request.body;
-  console.log(u_name, u_pw);
-  ctx.body = "123";
-});
-
-//注册接口
-let uName = []; //用户名数组，用于处理并发
+//用户注册
+let uName = [], //用户名数组，用于处理并发
+  pattern = new RegExp(
+    "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]"
+  ); //匹配特殊字符的正则
 router.post("/signin", async ctx => {
   let { u_name, u_pw, u_email } = ctx.request.body; //解构获取传参
   u_name = u_name ? u_name + "" : ""; //将参数转换为字符串类型以便校验器校验
@@ -34,7 +31,8 @@ router.post("/signin", async ctx => {
     !validator.isLength(u_pw, {
       min: 6,
       max: 16
-    })
+    }) ||
+    pattern.test(u_name)
   ) {
     //校验参数是否为空、邮箱格式是否正确密码长度是否在指定范围内
     return (ctx.body = {
@@ -73,6 +71,71 @@ router.post("/signin", async ctx => {
   ctx.body = {
     code: 8888,
     message: "Successful registration"
+  };
+});
+
+//用户登录
+router.post("/login", async ctx => {
+  let { u_name, u_pw } = ctx.request.body;
+  u_name = u_name ? u_name + "" : ""; //将参数转换为字符串类型以便校验器校验
+  u_pw = u_pw ? u_pw + "" : "";
+
+  if (
+    validator.isEmpty(u_name) ||
+    validator.isEmpty(u_pw) ||
+    !validator.isLength(u_pw, {
+      min: 6,
+      max: 16
+    }) ||
+    pattern.test(u_name)
+  ) {
+    return (ctx.body = {
+      code: 8002,
+      message: "Wrong parameter"
+    });
+  }
+  let dbRes = await User.findOne({
+    where: {
+      name: u_name,
+      password: md5(u_pw)
+    },
+    raw: true
+  });
+  if (dbRes === null) {
+    return (ctx.body = {
+      code: 8001,
+      message: "Incorrect user name or password"
+    });
+  }
+  //生成认证令牌
+  let token = jsonwebtoken.sign(
+    {
+      u_id: dbRes.id,
+      u_name: dbRes.name,
+      u_email: dbRes.email,
+      u_role: dbRes.role,
+      created: dbRes.createdAt
+    },
+    tokenOp.secret,
+    { expiresIn: tokenOp.validTime + "" }
+  );
+
+  try {
+    if (ctx.cookies) {
+      //判断cookies是否存在，是则将token加入到cookies中
+      ctx.cookies.set("authUser", JSON.stringify(token), {
+        maxAge: tokenOp.validTime,
+        overwrite: true
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  ctx.body = {
+    code: 8888,
+    message: "Login successful",
+    token: token
   };
 });
 
