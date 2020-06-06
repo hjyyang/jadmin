@@ -1,4 +1,3 @@
-const jwt = require("koa-jwt");
 const jsonwebtoken = require("jsonwebtoken");
 
 let tokenOp = {

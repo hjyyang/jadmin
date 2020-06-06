@@ -38,9 +38,9 @@ async function start() {
   }
 
   //在调用接口与返回结果之前执行路由鉴权判断
-  app.use((ctx, next) => {
-    tokenOp.handle(ctx, next);
-  });
+//   app.use((ctx, next) => {
+//     tokenOp.handle(ctx, next);
+//   });
 
   //------------使用接口url start-----------------
   app.use(user.routes()).use(user.allowedMethods());
