@@ -24,7 +24,8 @@ tokenOp.handle = (ctx, next) => {
   if (ctx.url.match(/^\/j_api/)) {
     //需要鉴权的路由
     let authorization = ctx.headers.authorization,
-      token;
+      token,
+      role = 0;
 
     if (ctx.headers) {
       if (!authorization) {
@@ -32,9 +33,17 @@ tokenOp.handle = (ctx, next) => {
         return (ctx.body = "Bad permissions");
       }
       token = authorization.split(" ")[1];
+      role = JSON.parse(
+        new Buffer.from(authorization.split(" ")[1].split(".")[1], "base64")
+      ).u_role; //获取token中用户的权限等级
       try {
         let decoded = jsonwebtoken.verify(token, tokenOp.secret),
           refresh = tokenOp.refreshFc(decoded);
+        if (role == 0) {
+          //如果是普通用户则抛出错误，响应错误权限
+          throw Error;
+        }
+
         if (refresh) {
           //在刷新时间范围内请求则刷新令牌
           try {

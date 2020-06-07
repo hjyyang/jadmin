@@ -38,7 +38,16 @@ let User = sequelize.define(
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
     },
-    role: Sequelize.TINYINT(10)
+    role: Sequelize.TINYINT(10),
+    authEmail: {
+      type: Sequelize.TINYINT,
+      defaultValue: 0
+    },
+    sex: {
+      type: Sequelize.STRING,
+      defaultValue: "no_gender"
+    },
+    face: Sequelize.STRING
   },
   {
     timestamps: false,
