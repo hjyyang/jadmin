@@ -41,6 +41,18 @@ module.exports = {
    */
   build: {
     transpile: [/^element-ui/],
+    babel: {
+        plugins: [
+            [
+                "component",
+                {
+                    libraryName: "element-ui",
+                    styleLibraryName: "theme-chalk",
+                },
+            ],
+        ],
+        comments: true,
+    },
     /*
      ** You can extend webpack config here
      */

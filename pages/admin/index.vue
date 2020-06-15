@@ -1,5 +1,7 @@
 <template>
-  <div id="admin_page"></div>
+  <main id="admin_page" class="page">
+      <nuxt-link to="/admin/document">test</nuxt-link>
+  </main>
 </template>
 
 <script>

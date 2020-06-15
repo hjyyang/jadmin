@@ -1,14 +1,22 @@
 <template>
-  <div id="document_page"></div>
+	<main id="document_page" class="page">
+		<div class="wrap">
+			<nuxt-link to="/">home</nuxt-link>
+			<nuxt-link to="/admin/document">test</nuxt-link>
+			<div style="height: 1000px"></div>
+		</div>
+	</main>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      test: ""
-    };
-  }
+	layout: "admin",
+	data() {
+		return {
+			test: ""
+		};
+	},
+	methods: {}
 };
 </script>
 
