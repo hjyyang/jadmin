@@ -27,7 +27,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/element-ui"],
+  plugins: ["@/plugins/element-ui", "@/plugins/event"],
   /*
    ** Nuxt.js dev-modules
    */
@@ -42,16 +42,16 @@ module.exports = {
   build: {
     transpile: [/^element-ui/],
     babel: {
-        plugins: [
-            [
-                "component",
-                {
-                    libraryName: "element-ui",
-                    styleLibraryName: "theme-chalk",
-                },
-            ],
-        ],
-        comments: true,
+      plugins: [
+        [
+          "component",
+          {
+            libraryName: "element-ui",
+            styleLibraryName: "theme-chalk"
+          }
+        ]
+      ],
+      comments: true
     },
     /*
      ** You can extend webpack config here

@@ -7,7 +7,17 @@ import {
   Menu,
   Submenu,
   MenuItem,
-  MenuItemGroup
+  MenuItemGroup,
+  Collapse,
+  CollapseItem,
+  Input,
+  InputNumber,
+  Switch,
+  Button,
+  Message,
+  Radio,
+  RadioGroup,
+  RadioButton
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/en";
 import locale from "element-ui/lib/locale";
@@ -22,3 +32,13 @@ Vue.use(Menu);
 Vue.use(Submenu);
 Vue.use(MenuItem);
 Vue.use(MenuItemGroup);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
+Vue.use(Input);
+Vue.use(InputNumber);
+Vue.use(Switch);
+Vue.use(Button);
+Vue.prototype.$message = Message;
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);

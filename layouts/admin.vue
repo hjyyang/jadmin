@@ -91,6 +91,7 @@ export default {
 		padding: 15px 15px 0;
 		overflow-y: auto;
 		> .wrap {
+			padding: 20px;
 			margin-bottom: 15px;
 			background-color: #fff;
 			box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
