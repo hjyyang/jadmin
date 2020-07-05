@@ -17,7 +17,8 @@ import {
   Message,
   Radio,
   RadioGroup,
-  RadioButton
+  RadioButton,
+  Popover
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/en";
 import locale from "element-ui/lib/locale";
@@ -42,3 +43,4 @@ Vue.prototype.$message = Message;
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(RadioButton);
+Vue.use(Popover);

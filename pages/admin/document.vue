@@ -17,12 +17,11 @@
                     }"
 				>
 					<el-collapse accordion>
-						<el-collapse-item
-							class="dom_item"
-							:title="item1.title"
-							v-for="(item1,index1) in listData"
-							:key="index1"
-						>
+						<el-collapse-item class="dom_item" v-for="(item1,index1) in listData" :key="index1">
+							<template slot="title">
+								<span class="title">{{ item1.title }}</span>
+								<i class="header-icon el-icon-circle-plus" slot="reference" @click.stop="addItem(index1)"></i>
+							</template>
 							<el-collapse accordion @change="handleChange">
 								<el-collapse-item
 									:class="[item2.method,'api_item',editState?'editing':'']"
@@ -31,9 +30,15 @@
 								>
 									<template slot="title">
 										<div class="method">{{ item2.method }}</div>
-										{{ item2.title }}
+										<span class="title">{{ item2.title }}</span>
+										<i
+											class="header-icon el-icon-remove"
+											slot="reference"
+											@click.stop="removeItem(index1,index2)"
+											v-if="isAdmin"
+										></i>
 									</template>
-									<div class="edit_wrap">
+									<div class="edit_wrap" v-if="isAdmin">
 										<el-button
 											class="edit_btn"
 											:type="item2.method == 'Get' ?'primary' : 'success'"
@@ -108,7 +113,7 @@ export default {
 					title: "用户接口",
 					list: [
 						{
-							title: "/j_api/list",
+							title: "/j_api/user/list",
 							describe: "获取用户信息数据列表接口",
 							method: "Get",
 							parameters: [
@@ -140,13 +145,17 @@ export default {
 							]
 						}
 					]
+				},
+				{
+					title: "文章接口"
 				}
 			],
 			method: {
 				Get: 1,
 				Post: 2
 			},
-			editState: false
+			editState: false,
+			isAdmin: true
 		};
 	},
 	mounted() {},
@@ -185,6 +194,21 @@ export default {
 				message: "已复制",
 				type: "success"
 			});
+		},
+		removeItem(pIndex, index) {
+			console.log(pIndex, index);
+			if (pIndex == undefined || index == undefined) return false;
+			this.listData[pIndex].list.splice(index, 1);
+		},
+		addItem(index) {
+			//添加接口item
+			let api = {
+				title: "",
+				describe: "",
+				method: "Get",
+				parameters: []
+			};
+			this.listData[index].list.unshift(api);
 		}
 	}
 };
@@ -287,6 +311,21 @@ export default {
 			// font-weight: bold;
 		}
 	}
+	span.button,
+	.header-icon {
+		width: 30px;
+		height: 30px;
+		line-height: 30px;
+		margin-left: auto;
+		text-align: center;
+		font-size: 20px;
+	}
+	span.title {
+		margin-right: auto;
+	}
+	.el-collapse-item__arrow {
+		margin-left: 30px;
+	}
 	h4.sub_title {
 		margin: 10px 0 10px;
 		font-size: 15px;
@@ -332,6 +371,7 @@ export default {
 	}
 	.p_row {
 		display: flex;
+		min-height: 28px;
 		margin-bottom: 10px;
 		&:last-of-type {
 			margin-bottom: 0;
