@@ -1,6 +1,9 @@
 <template>
   <main id="admin_page" class="page">
-      <nuxt-link to="/admin/document">test</nuxt-link>
+    <div class="container j_row">
+      <div class="card"></div>
+      <div class="card side"></div>
+    </div>
   </main>
 </template>
 
@@ -10,4 +13,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+#admin_page {
+}
+</style>
