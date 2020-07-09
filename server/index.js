@@ -11,6 +11,7 @@ const tokenOp = require("./common/token");
 //------------引入接口 start-----------------
 const user = require("./api/user");
 const notAuth = require("./api/notAuth");
+const document = require("./api/document");
 //------------引入接口 end-------------------
 
 const app = new Koa();
@@ -46,6 +47,7 @@ async function start() {
   //------------使用接口url start-----------------
   app.use(user.routes()).use(user.allowedMethods());
   app.use(notAuth.routes()).use(notAuth.allowedMethods());
+  app.use(document.routes()).use(document.allowedMethods());
   //------------使用接口url end-----------------
 
   app.use(ctx => {

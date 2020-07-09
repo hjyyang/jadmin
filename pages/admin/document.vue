@@ -45,7 +45,7 @@
                 >
                   <template slot="title">
                     <div class="method">{{ item2.method }}</div>
-                    <span class="title">{{ item2.title }}</span>
+                    <span class="title">{{ item2.path }}</span>
                     <el-popconfirm
                       title="确定删除吗？"
                       confirmButtonType="danger"
@@ -81,7 +81,7 @@
                     </div>
                     <div class="path_wrap j_col_8">
                       <h4 class="sub_title">Path</h4>
-                      <div class="content edit_content">{{ item2.title }}</div>
+                      <div class="content edit_content">{{ item2.path }}</div>
                       <el-input
                         class="edit"
                         size="mini"
@@ -176,7 +176,7 @@ export default {
           title: "用户接口",
           list: [
             {
-              title: "/j_api/user/list",
+              path: "/j_api/user/list",
               describe: "获取用户信息数据列表接口",
               method: "Get",
               parameters: [
@@ -189,7 +189,7 @@ export default {
               ]
             },
             {
-              title: "/signin",
+              path: "/signin",
               describe: "用户注册接口",
               method: "Post",
               parameters: [

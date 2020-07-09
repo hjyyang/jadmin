@@ -77,7 +77,7 @@ router.post("/signin", async ctx => {
   }
   ctx.body = {
     code: 8888,
-    message: "Successful registration"
+    message: "Successful"
   };
 });
 
@@ -142,7 +142,7 @@ router.post("/login", async ctx => {
 
   return (ctx.body = {
     code: 8888,
-    message: "Login successful",
+    message: "successful",
     token: token
   });
 });

@@ -60,5 +60,6 @@ module.exports = {
   },
   server: {
     port: 8080
-  }
+  },
+  telemetry: true
 };

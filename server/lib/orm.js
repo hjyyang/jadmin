@@ -61,4 +61,93 @@ let User = sequelize.define(
 
 dataTables.User = User;
 
+let Document = sequelize.define(
+  "document",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    group: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    path: Sequelize.STRING,
+    method: Sequelize.STRING,
+    describe: Sequelize.STRING
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+);
+
+dataTables.Document = Document;
+
+let Parameter = sequelize.define(
+  "parameters",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    required: {
+      type: Sequelize.TINYINT,
+      allowNull: false
+    },
+    value: Sequelize.STRING,
+    type: Sequelize.STRING,
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+);
+dataTables.Parameter = Parameter;
+
+let DomRelationships = sequelize.define(
+  "dom_relationships",
+  {
+    object_id: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      primaryKey: true
+    },
+    term_taxonomy_id: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      primaryKey: true
+    }
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+);
+dataTables.DomRelationships = DomRelationships;
+Document.hasOne(DomRelationships, { foreignKey: "object_id" });
+Parameter.hasOne(DomRelationships, { foreignKey: "term_taxonomy_id" });
+Document.belongsToMany(Parameter, {
+  through: {
+    model: DomRelationships,
+    unique: false
+  },
+  foreignKey: "object_id",
+  constraints: false
+});
+Parameter.belongsToMany(Document, {
+  through: {
+    model: DomRelationships,
+    unique: false
+  },
+  foreignKey: "term_taxonomy_id",
+  constraints: false
+});
+
 module.exports = dataTables;

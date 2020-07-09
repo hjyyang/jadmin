@@ -3,7 +3,7 @@ const jsonwebtoken = require("jsonwebtoken");
 let tokenOp = {
   secret: "my secret is hjy8908581", //路由鉴权密钥
   validTime: 60000 * 60 * 24, //cookie与令牌有效时间(毫秒)
-  refreshTime: 60 * 60 * 23, //刷新令牌时间（秒）
+  refreshTime: 60 * 60 * 23.5, //刷新令牌时间（秒）
   handle: null
 };
 //设置令牌过期时间2小时，刷新时间是1小时，在临过期前一小时有操作则更新令牌
@@ -32,9 +32,9 @@ tokenOp.handle = (ctx, next) => {
         ctx.status = 401;
         return (ctx.body = "Bad permissions");
       }
-      token = authorization.split(" ")[1];
+      token = authorization.split(" ")[1] ? authorization.split(" ")[1]: authorization;
       role = JSON.parse(
-        new Buffer.from(authorization.split(" ")[1].split(".")[1], "base64")
+        new Buffer.from(token.split(".")[1], "base64")
       ).u_role; //获取token中用户的权限等级
       try {
         let decoded = jsonwebtoken.verify(token, tokenOp.secret),
