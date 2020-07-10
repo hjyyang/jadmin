@@ -19,7 +19,10 @@ module.exports = {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: "#fff" },
+  loading: {
+    color: "#fe4e0e",
+    failedColor: "red"
+  },
   /*
    ** Global CSS
    */
@@ -27,7 +30,25 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/element-ui", "@/plugins/event"],
+  plugins: [
+    {
+      src: "@/plugins/element-ui",
+      ssr: true
+    },
+    {
+      src: "@/plugins/event",
+      ssr: false
+    },
+    "@/plugins/axios",
+    {
+      src: "@/plugins/api",
+      ssr: false
+    }
+  ],
+  axios: {
+    baseURL:
+      process.env.NODE_ENV === "development" ? `http://localhost:8080` : ""
+  },
   /*
    ** Nuxt.js dev-modules
    */
@@ -35,7 +56,7 @@ module.exports = {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ["@nuxtjs/axios"],
   /*
    ** Build configuration
    */

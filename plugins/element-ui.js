@@ -18,7 +18,9 @@ import {
   Radio,
   RadioGroup,
   RadioButton,
-  Popconfirm
+  Popconfirm,
+  Form,
+  FormItem
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/en";
 import locale from "element-ui/lib/locale";
@@ -44,3 +46,5 @@ Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(RadioButton);
 Vue.use(Popconfirm);
+Vue.use(Form);
+Vue.use(FormItem);
