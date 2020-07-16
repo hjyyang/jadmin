@@ -5,13 +5,11 @@
 				<i class="el-icon-s-fold"></i>
 			</div>
 			<div class="user">
-				<el-dropdown>
+				<el-dropdown @command="handleCommand">
 					<el-avatar :size="'medium'" :src="avatar" icon="el-icon-s-custom"></el-avatar>
 					<el-dropdown-menu slot="dropdown" class="app_dropdown">
-						<template>
-							<el-dropdown-item icon="el-icon-user" command="/aboutMe">我的资料</el-dropdown-item>
-							<el-dropdown-item icon="el-icon-switch-button" command="logout">注销</el-dropdown-item>
-						</template>
+						<el-dropdown-item icon="el-icon-user" command="/aboutMe">我的资料</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-switch-button" command="/logout">注销</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</div>
@@ -35,6 +33,22 @@ export default {
 	methods: {
 		sideHide() {
 			this.$emit("sideChange");
+		},
+		handleCommand(command){
+			if(command == "/logout"){
+				this.$store.dispatch("logout");
+				this.$message({
+					type: "success",
+					message: "已退出!"
+				});
+				this.$router.push({
+					path: "/"
+				})
+			}else{
+				this.$router.push({
+					path: command
+				})
+			}
 		}
 	}
 };

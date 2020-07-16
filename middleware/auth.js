@@ -1,5 +1,5 @@
-export default function({ store, error, redirect, route }) {
+export default function({ app, req, store, error, redirect, route }) {
   if (!store || !store.state.authUser) {
-    return redirect("/login");
+    return redirect("/login?redirect="+route.fullPath);
   }
 }

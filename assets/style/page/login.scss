@@ -1,14 +1,17 @@
+#member_layout {
+  background-color: #fdfaf5;
+}
 .signin {
   display: flex;
   align-items: center;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh);
   .signin_container {
     max-width: 360px;
     width: 100%;
     margin: 0 auto;
     padding-bottom: 8px;
     box-sizing: border-box;
-    background: #ffffff;
+    // background: #ffffff;
     overflow: hidden;
   }
   .signin_head {

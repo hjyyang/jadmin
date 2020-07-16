@@ -92,7 +92,7 @@ router.post("/login", async ctx => {
     validator.isEmpty(u_pw) ||
     !validator.isLength(u_pw, {
       min: 6,
-      max: 16
+      max: 32
     }) ||
     pattern.test(u_name)
   ) {
@@ -147,4 +147,15 @@ router.post("/login", async ctx => {
   });
 });
 
+//用户退出
+router.get("/logout", async ctx => {
+  ctx.cookies.set("authUser", "", {
+    maxAge: 0,
+    overwrite: true
+  });
+  ctx.body = {
+    code: 8888,
+    message: "successful"
+  };
+});
 module.exports = router;

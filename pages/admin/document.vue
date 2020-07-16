@@ -2,13 +2,10 @@
 	<main id="document_page" class="page">
 		<div class="wrap">
 			<h1>Api 文档</h1>
-			<div
-				class="list"
-				v-delegation="{
+			<div class="list" v-delegation="{
 					nodeClass: 'edit_btn',
 					handle: showEdit
-				}"
-			>
+				}">
 				<div
 					class="list-wrap"
 					v-delegation="{
@@ -53,11 +50,7 @@
 											@onConfirm="removeItem(index1, index2)"
 											v-if="isAdmin"
 										>
-											<i
-												class="header-icon el-icon-remove"
-												slot="reference"
-												@click.stop
-											></i>
+											<i class="header-icon el-icon-remove" slot="reference" @click.stop></i>
 										</el-popconfirm>
 									</template>
 									<div class="edit_wrap" v-if="isAdmin">
@@ -65,99 +58,54 @@
 											class="edit_btn"
 											:type="item2.method == 'Get' ? 'primary' : 'success'"
 											size="mini"
-											>编辑</el-button
-										>
+										>编辑</el-button>
 									</div>
 									<div class="j_row">
 										<div class="method_wrap j_col_8">
 											<h4 class="sub_title">Method</h4>
 											<div class="content edit_content">{{ item2.method }}</div>
 											<el-radio-group v-model="item2.method" class="edit">
-												<el-radio
-													v-for="(val, key, i) in method"
-													:key="i"
-													:label="key"
-													>{{ key }}</el-radio
-												>
+												<el-radio v-for="(val, key, i) in method" :key="i" :label="key">{{ key }}</el-radio>
 											</el-radio-group>
 										</div>
 										<div class="path_wrap j_col_8">
 											<h4 class="sub_title">Path</h4>
 											<div class="content edit_content">{{ item2.path }}</div>
-											<el-input
-												class="edit"
-												size="mini"
-												v-model="item2.path"
-											></el-input>
+											<el-input class="edit" size="mini" v-model="item2.path"></el-input>
 										</div>
 									</div>
 									<div class="describe">
 										<h4 class="sub_title">Describe</h4>
 										<div class="content edit_content">{{ item2.describe }}</div>
-										<el-input
-											class="edit"
-											size="mini"
-											v-model="item2.describe"
-										></el-input>
+										<el-input class="edit" size="mini" v-model="item2.describe"></el-input>
 									</div>
 									<div class="parameters">
 										<div class="par_head">
 											<h4 class="sub_title">Parameters</h4>
-											<i
-												class="header-icon el-icon-circle-plus add_par"
-												slot="reference"
-											></i>
+											<i class="header-icon el-icon-circle-plus add_par" slot="reference"></i>
 										</div>
-										<div
-											class="p_item"
-											v-for="(item3, index3) in item2.parameters"
-											:key="index3"
-										>
+										<div class="p_item" v-for="(item3, index3) in item2.parameters" :key="index3">
 											<div class="name">
 												<div class="edit_content">
 													{{ item3.name }}
-													<span
-														style="color: red;"
-														class="required"
-														v-if="item3.required"
-														>*</span
-													>:
+													<span style="color: red;" class="required" v-if="item3.required">*</span>:
 												</div>
 												<div class="input_wrap">
-													<el-input
-														class="edit"
-														size="mini"
-														v-model="item3.name"
-													></el-input>
+													<el-input class="edit" size="mini" v-model="item3.name"></el-input>
 													<i class="header-icon el-icon-remove remove_par"></i>
 												</div>
 											</div>
 											<div class="detail">
 												<template v-for="(val, key, i) in item3">
-													<div
-														class="p_row"
-														:key="i"
-														v-if="key != 'name' && key != 'required'"
-													>
+													<div class="p_row" :key="i" v-if="key != 'name' && key != 'required'">
 														<div class="key">{{ key }}:</div>
 														<div class="value edit_content">{{ val }}</div>
-														<el-input
-															class="edit"
-															size="mini"
-															v-model="item3[key]"
-														></el-input>
+														<el-input class="edit" size="mini" v-model="item3[key]"></el-input>
 													</div>
-													<div
-														class="p_row"
-														:key="i"
-														v-else-if="key == 'required'"
-													>
+													<div class="p_row" :key="i" v-else-if="key == 'required'">
 														<div class="key">{{ key }}:</div>
 														<div class="value edit_content">{{ val }}</div>
-														<el-switch
-															class="edit"
-															v-model="item3[key]"
-														></el-switch>
+														<el-switch class="edit" v-model="item3[key]"></el-switch>
 													</div>
 												</template>
 											</div>
