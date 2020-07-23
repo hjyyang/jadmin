@@ -43,7 +43,11 @@ module.exports = {
     "@/plugins/axios",
     {
       src: "@/plugins/api",
-      ssr: false
+      ssr: true
+    },
+    {
+      src: "@/plugins/variable-color",
+      ssr: true
     }
   ],
   axios: {

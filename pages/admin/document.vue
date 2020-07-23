@@ -229,11 +229,8 @@ export default {
 			}
 		},
 		async getData() {
-			let res = await this.$axios({
-				method: "Get",
-				url: "/j_api/domc/list"
-			});
-			console.log(res);
+			// let res = await this.$request.;
+			// console.log(res);
 		}
 	}
 };

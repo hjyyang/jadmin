@@ -1,5 +1,5 @@
 #member_layout {
-  background-color: #fdfaf5;
+  background-color: var(--bg);
 }
 .signin {
   display: flex;
@@ -11,7 +11,6 @@
     margin: 0 auto;
     padding-bottom: 8px;
     box-sizing: border-box;
-    // background: #ffffff;
     overflow: hidden;
   }
   .signin_head {
@@ -30,14 +29,17 @@
   button {
     width: 100%;
     margin-top: 20px;
-    background: $currentColor;
-    border-color: $currentColor;
+    background: var(--btn);
+    border-color: var(--btn);
     transition: all 0.3s;
     &:hover,
     &:focus {
       background: none;
-      border-color: $currentColor;
-      color: $currentColor;
+      border-color: var(--btn);
+      color: var(--btn);
     }
+  }
+  .el-input__inner:focus{
+      border-color: var(--border);
   }
 }

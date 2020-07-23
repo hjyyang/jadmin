@@ -16,6 +16,12 @@ const request = {
     params.url = "/no_auth/user/logout";
     params.method = "get";
     return axios(params);
+  },
+  //获取文档列表
+  getDomList: (params = {}) => {
+    params.url = "/j_api/domc/list";
+    params.method = "get";
+    return axios(params);
   }
 };
 let axios = null;

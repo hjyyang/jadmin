@@ -1,13 +1,14 @@
 <template>
-  <div id="member_layout">
-    <nuxt />
-  </div>
+	<div id="member_layout" :style="$jCssText">
+		<nuxt />
+	</div>
 </template>
 
 <script>
 export default {
-    mounted(){
-        console.log(this.$route)
-    }
+	data() {
+		return {};
+	},
+	mounted() {}
 };
 </script>

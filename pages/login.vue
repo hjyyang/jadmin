@@ -58,7 +58,8 @@ export default {
 			fromPath: "/"
 		};
 	},
-	mounted() {},
+	mounted() {
+    },
 	methods: {
 		submitForm(formName) {
 			this.$refs[formName].validate(valid => {
