@@ -1,16 +1,12 @@
 const cookieparser = process.server ? require("cookieparser") : undefined;
 
 export const state = () => ({
-  authUser: null,
-  beforeRedirectPath: null
+  authUser: null
 });
 
 export const mutations = {
   SET_USER(state, user) {
     state.authUser = user;
-  },
-  SET_PATH(state, path) {
-    state.beforeRedirectPath = path;
   }
 };
 
@@ -36,14 +32,15 @@ export const actions = {
   async login({ commit }, { username, password, email }) {
     try {
       const { data } = await this.$request.login({
-        data: {
-          u_name: username,
-          u_pw: password,
-          u_email: email
-        }
+        u_name: username,
+        u_pw: password,
+        u_email: email
       });
       if (data.code == 8888) {
-        commit("SET_USER", data);
+        let auth = atob(data.token.split(".")[1]).toString();
+        auth = JSON.parse(auth);
+        auth.token = data.token;
+        commit("SET_USER", auth);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

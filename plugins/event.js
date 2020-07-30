@@ -114,7 +114,6 @@ function delegation(dirOp) {
       while (
         dirOp.elClass != target.classList.value //当前目标class与标签名与自定义指令绑定节点相同时停止遍历
       ) {
-        tagName = target.tagName.toLocaleLowerCase(); //获取当前目标小写节点名
         if (target.classList.value.match(reg) !== null) {
           //当前目标class列表中匹配到代理的item的class时
           if (!dirOp.handle) {

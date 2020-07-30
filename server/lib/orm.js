@@ -93,8 +93,8 @@ let Parameter = sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
-    required: {
-      type: Sequelize.TINYINT,
+    requireds: {
+      type: Sequelize.BOOLEAN,
       allowNull: false
     },
     value: Sequelize.STRING,

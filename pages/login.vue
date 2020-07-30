@@ -85,7 +85,7 @@ export default {
 					type: "success",
 					message: "登录成功!"
 				});
-				console.log(this.fromPath);
+				// console.log(this.fromPath);
 				this.$router.push(this.fromPath);
 			} catch (e) {
 				throw e;

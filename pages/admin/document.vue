@@ -2,30 +2,21 @@
 	<main id="document_page" class="page">
 		<div class="wrap">
 			<h1>Api 文档</h1>
-			<div class="list" v-delegation="{
-					nodeClass: 'edit_btn',
-					handle: showEdit
-				}">
-				<div
-					class="list-wrap"
-					v-delegation="{
-						nodeClass: 'edit_content',
-						handle: copyCentent
-					}"
-				>
+			<div class="list" ref="do_list">
+				<div class="list-wrap" @input="isChangeEv">
 					<el-collapse accordion v-model="activeItem" @change="changeOpen">
 						<el-collapse-item
 							class="dom_item"
-							v-for="(item1, index1) in listData"
+							v-for="(item1, key1, index1) in listData"
 							:key="index1"
 							:name="index1 + 1"
 						>
 							<template slot="title">
-								<span class="title">{{ item1.title }}</span>
+								<span class="title">{{ key1 }}</span>
 								<i
 									class="header-icon el-icon-circle-plus"
 									slot="reference"
-									@click.stop="addItem(index1)"
+									@click.stop="addItem(key1)"
 									v-if="isAdmin"
 									v-show="activeItem == index1 + 1"
 								></i>
@@ -38,7 +29,7 @@
 										editState ? 'editing' : ''
 									]"
 									:edit-state="editState ? 'editing' : ''"
-									v-for="(item2, index2) in item1.list"
+									v-for="(item2, index2) in item1"
 									:key="index2"
 								>
 									<template slot="title">
@@ -47,7 +38,7 @@
 										<el-popconfirm
 											title="确定删除吗？"
 											confirmButtonType="danger"
-											@onConfirm="removeItem(index1, index2)"
+											@onConfirm="removeItem(key1, index2,item2.id)"
 											v-if="isAdmin"
 										>
 											<i class="header-icon el-icon-remove" slot="reference" @click.stop></i>
@@ -58,7 +49,9 @@
 											class="edit_btn"
 											:type="item2.method == 'Get' ? 'primary' : 'success'"
 											size="mini"
-										>编辑</el-button>
+											:data-key="key1"
+											:data-index="index2"
+										>{{ isChange ? "保存":"编辑" }}</el-button>
 									</div>
 									<div class="j_row">
 										<div class="method_wrap j_col_8">
@@ -82,31 +75,43 @@
 									<div class="parameters">
 										<div class="par_head">
 											<h4 class="sub_title">Parameters</h4>
-											<i class="header-icon el-icon-circle-plus add_par" slot="reference"></i>
+											<i
+												class="header-icon el-icon-circle-plus add_par"
+												:data-key="key1"
+												:data-index="index2"
+												slot="reference"
+											></i>
 										</div>
 										<div class="p_item" v-for="(item3, index3) in item2.parameters" :key="index3">
 											<div class="name">
 												<div class="edit_content">
 													{{ item3.name }}
-													<span style="color: red;" class="required" v-if="item3.required">*</span>:
+													<span style="color: red;" class="required" v-if="item3.requireds">*</span>:
 												</div>
 												<div class="input_wrap">
 													<el-input class="edit" size="mini" v-model="item3.name"></el-input>
-													<i class="header-icon el-icon-remove remove_par"></i>
+													<i
+														class="header-icon el-icon-remove remove_par"
+														:data-key="key1"
+														:data-index="index2"
+														:data-selfIndex="index3"
+													></i>
 												</div>
 											</div>
 											<div class="detail">
-												<template v-for="(val, key, i) in item3">
-													<div class="p_row" :key="i" v-if="key != 'name' && key != 'required'">
-														<div class="key">{{ key }}:</div>
-														<div class="value edit_content">{{ val }}</div>
-														<el-input class="edit" size="mini" v-model="item3[key]"></el-input>
-													</div>
-													<div class="p_row" :key="i" v-else-if="key == 'required'">
-														<div class="key">{{ key }}:</div>
-														<div class="value edit_content">{{ val }}</div>
-														<el-switch class="edit" v-model="item3[key]"></el-switch>
-													</div>
+												<template v-for="(val, key3, i) in item3">
+													<template v-if="key3!='dom_relationships' && key3!='id'">
+														<div class="p_row" :key="i" v-if="key3 != 'name' && key3 != 'requireds'">
+															<div class="key">{{ key3 }}:</div>
+															<div class="value edit_content">{{ val }}</div>
+															<el-input class="edit" size="mini" v-model="item3[key3]"></el-input>
+														</div>
+														<div class="p_row" :key="i" v-else-if="key3 == 'requireds'">
+															<div class="key">{{ key3 }}:</div>
+															<div class="value edit_content">{{ val }}</div>
+															<el-switch class="edit" v-model="item3[key3]" @change="isChangeEv"></el-switch>
+														</div>
+													</template>
 												</template>
 											</div>
 										</div>
@@ -130,65 +135,51 @@ export default {
 	data() {
 		return {
 			activeItem: null,
-			listData: [
-				{
-					title: "用户接口",
-					list: [
-						{
-							path: "/j_api/user/list",
-							describe: "获取用户信息数据列表接口",
-							method: "Get",
-							parameters: [
-								{
-									name: "page",
-									required: true,
-									value: "非0整数",
-									type: "String"
-								}
-							]
-						},
-						{
-							path: "/signin",
-							describe: "用户注册接口",
-							method: "Post",
-							parameters: [
-								{
-									name: "u_name",
-									required: false,
-									value: "非空无特殊字符",
-									type: "String"
-								},
-								{
-									name: "u_pw",
-									required: false,
-									value: "非空无特殊字符,长度在6～32位之间",
-									type: "String"
-								}
-							]
-						}
-					]
-				},
-				{
-					title: "文章接口",
-					list: []
-				}
-			],
+			listData: {}, //列表数据
 			method: {
+				//请求方法
 				Get: 1,
 				Post: 2
 			},
-			editState: false,
-			isAdmin: true
+			editState: false, //编辑框是否显示
+			isAdmin: this.$store.state.authUser.u_role > 1, //判断是否为超级管理员
+			isChange: false, //是否有改变列表数据
+			listDataStr: "" //列表数据序列化字符串
 		};
 	},
-	mounted() {
-		this.getData();
-	},
 	methods: {
-		showEdit(e) {
+		async showEdit(e) {
 			//点击编辑按钮后显示所有的编辑框并隐藏内容
-			let parent = e.offsetParent;
-			this.editState = !this.editState;
+			if (this.editState && this.isChange) {
+				//已打开编辑且改变api内容，保存修改api
+				let key = e.dataset.key,
+					index = e.dataset.index;
+				if (!key || !index) return false;
+				let apiItem = this.listData[key][index];
+				let res = await this.$request.updateDomList({
+					aid: apiItem.id,
+					path: apiItem.path,
+					method: apiItem.method,
+					describe: apiItem.describe,
+					title: apiItem.title,
+					parameters: apiItem.parameters
+				});
+				if (res.data.code == 8888) {
+					this.$message({
+						message: "已修改",
+						type: "success"
+					});
+					this.listDataStr = JSON.stringify(this.listData);
+					this.editState = !this.editState;
+					this.isChangeEv();
+				} else {
+					this.$message.error("修改失败");
+				}
+			} else {
+				//打开编辑api
+				this.listDataStr = JSON.stringify(this.listData);
+				this.editState = !this.editState;
+			}
 		},
 		handleChange(val) {
 			//关闭折叠面板后清除属性
@@ -207,20 +198,44 @@ export default {
 				type: "success"
 			});
 		},
-		removeItem(pIndex, index) {
-			console.log(pIndex, index);
-			if (pIndex == undefined || index == undefined) return false;
-			this.listData[pIndex].list.splice(index, 1);
+		async removeItem(key, index, id) {
+			//删除api
+			console.log(key, index, id);
+			let res = await this.$request.removeDomList({
+				rid: id
+			});
+			if (res.data.code == 8888) {
+				//删除成功
+				if (key == undefined || index == undefined) return false;
+				this.listData[key].splice(index, 1);
+				this.listDataStr = JSON.stringify(this.listData);
+				this.$message({
+					message: "已删除",
+					type: "success"
+				});
+			} else {
+				this.$message.error("删除失败");
+			}
 		},
-		addItem(index) {
+		async addItem(key) {
 			//添加接口item
 			let api = {
-				title: "",
+				title: key,
 				describe: "",
 				method: "Get",
+				path: "/no_auth",
 				parameters: []
 			};
-			this.listData[index].list.unshift(api);
+			let res = await this.$request.addDomList({
+				title: key,
+				describe: "",
+				method: "Get",
+				path: "/no_auth"
+			});
+			if (res.data.code == 8888) {
+				this.listDataStr = JSON.stringify(this.listData);
+				this.listData[key].unshift(api);
+			}
 		},
 		changeOpen(index) {
 			if (!index) {
@@ -229,9 +244,79 @@ export default {
 			}
 		},
 		async getData() {
-			// let res = await this.$request.;
-			// console.log(res);
+			let res = await this.$request.getDomList(),
+				data = res.data;
+			if (data.code == 8888) {
+				console.log(data.d_list);
+				this.listData = data.d_list;
+			}
+		},
+		isChangeEv() {
+			//判断是否有修改
+			setTimeout(() => {
+				if (this.listDataStr == JSON.stringify(this.listData)) {
+					this.isChange = false;
+				} else {
+					this.isChange = true;
+				}
+			}, 200);
+		},
+		clickListener(e) {
+			//页面点击事件监听do_list
+			let ev = e || window.event,
+				target = ev.target || ev.srcElement,
+				classArr = target.classList.value.split(" ");
+			while (classArr.indexOf("list") == -1) {
+				if (classArr.indexOf("add_par") != -1) {
+					//添加参数
+					this.parHandle(target, true);
+				} else if (classArr.indexOf("remove_par") != -1) {
+					//删除参数
+					this.parHandle(target, false);
+				} else if (classArr.indexOf("edit_btn") != -1) {
+					//打开编辑框
+					this.showEdit(target);
+				} else if (classArr.indexOf("edit_content") != -1) {
+					//复制内容
+					this.copyCentent(target);
+				}
+
+				target = target.parentNode; //往上级节点移动
+				classArr = target.classList.value.split(" ");
+			}
+		},
+		parHandle(e, lock) {
+			//添加删除参数
+			let key = e.dataset.key,
+				index = e.dataset.index,
+				parArr = this.listData[key][index].parameters,
+				arg = {
+					requireds: false,
+					value: "",
+					type: "String",
+					name: ""
+				};
+			if (lock) {
+				//添加参数
+				parArr.unshift(arg);
+			} else {
+				//删除参数
+				let parIndex = e.dataset.selfindex;
+				parArr.splice(parIndex, 1);
+			}
+			this.isChangeEv();
 		}
+	},
+	mounted() {
+		this.getData();
+		this.$refs.do_list.addEventListener("click", this.clickListener, false);
+	},
+	beforeDestroy() {
+		this.$refs.do_list.removeEventListener(
+			"click",
+			this.clickListener,
+			false
+		);
 	}
 };
 </script>

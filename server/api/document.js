@@ -100,14 +100,23 @@ router.get("/list", async ctx => {
     include: [
       {
         model: Parameter,
-        attributes: ["id", "required", "value", "name", "type"]
+        attributes: ["id", "requireds", "value", "name", "type"]
       }
     ]
   });
+  let domList = {};
+  for (let i in res) {
+    if (domList[res[i].dataValues.title]) {
+      domList[res[i].dataValues.title].push(res[i].dataValues);
+    } else {
+      domList[res[i].dataValues.title] = [];
+      domList[res[i].dataValues.title].push(res[i].dataValues);
+    }
+  }
   return (ctx.body = {
     code: 8888,
     message: "successful",
-    d_list: res
+    d_list: domList
   });
 });
 
