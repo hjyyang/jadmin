@@ -19,9 +19,7 @@ export default {
 	data() {
 		return {
 			pageName:
-				this.$route.path.split("/")[
-					this.$route.path.split("/").length - 1
-				] + "_page",
+				this.$route.name + "-page",
 			sideOPen: false
 		};
 	},
@@ -31,7 +29,7 @@ export default {
 		//新增窗口大小响应监听
 		this.resize(true);
 		//默认执行一次窗口大小判断
-		this.handleEvent();
+        this.handleEvent();
 	},
 	beforeDestroy() {
 		//销毁前去除body的class
@@ -73,8 +71,9 @@ export default {
 			handler: function(to, from) {
 				//监听路由变化修改body的class
 				this.removeBodyClass();
+                console.log(to)
 				this.pageName =
-					to.path.split("/")[to.path.split("/").length - 1] + "_page";
+					to.name + "-page";
 				this.addBodyClass();
 			},
 			// 深度观察监听

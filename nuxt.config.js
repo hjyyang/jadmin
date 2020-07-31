@@ -47,7 +47,7 @@ module.exports = {
     },
     {
       src: "@/plugins/variable-color",
-      ssr: true
+      ssr: false
     }
   ],
   axios: {

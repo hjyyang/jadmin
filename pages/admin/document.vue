@@ -234,6 +234,7 @@ export default {
 			});
 			if (res.data.code == 8888) {
 				this.listDataStr = JSON.stringify(this.listData);
+				api.id = res.data.id;
 				this.listData[key].unshift(api);
 			}
 		},

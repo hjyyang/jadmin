@@ -5,12 +5,15 @@ let jColor = {
   border: "#bbb",
   currentColor: ""
 };
-let jCssText = `
-  --bg: ${jColor.bg};
-  --btn: ${jColor.btn};
-  --color: ${jColor.color};
-  --border: ${jColor.border};
-`;
-export default function({ $axios }, inject) {
-  inject("jCssText", jCssText);
+
+export default function({ $axios, nuxtState, $request }, inject) {
+  //   if (nuxtState.layout != "admin") {
+  let jCssText = `
+        --bg: ${jColor.bg};
+        --btn: ${jColor.btn};
+        --color: ${jColor.color};
+        --border: ${jColor.border};
+    `;
+  document.documentElement.style = jCssText;
+  //   }
 }

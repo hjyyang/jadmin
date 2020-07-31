@@ -3,7 +3,7 @@ class Api {
     let self = this;
     return function(data) {
       let parameter = {
-        url: url + self.addQuery(data),
+        url: method ? url : url + self.addQuery(data),
         method: method || "get",
         data
       };
