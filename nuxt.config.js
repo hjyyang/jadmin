@@ -37,7 +37,7 @@ module.exports = {
       ssr: true
     },
     {
-      src: "@/plugins/event",
+      src: "@/plugins/directive",
       ssr: false
     },
     "@/plugins/axios",
@@ -47,6 +47,10 @@ module.exports = {
     },
     {
       src: "@/plugins/variable-color",
+      ssr: false
+    },
+    {
+      src: "@/plugins/events",
       ssr: false
     }
   ],

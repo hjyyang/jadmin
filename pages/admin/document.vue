@@ -129,6 +129,7 @@
 <script>
 export default {
 	layout: "admin",
+	transition: "slide",
 	head: {
 		title: "jadmin-document"
 	},
@@ -184,19 +185,6 @@ export default {
 		handleChange(val) {
 			//关闭折叠面板后清除属性
 			this.editState = false;
-		},
-		copyCentent(e) {
-			//点击复制所点内容
-			let selection = window.getSelection();
-			selection.removeAllRanges();
-			let range = document.createRange();
-			range.selectNodeContents(e);
-			selection.addRange(range);
-			document.execCommand("copy");
-			this.$message({
-				message: "已复制",
-				type: "success"
-			});
 		},
 		async removeItem(key, index, id) {
 			//删除api
@@ -279,7 +267,7 @@ export default {
 					this.showEdit(target);
 				} else if (classArr.indexOf("edit_content") != -1) {
 					//复制内容
-					this.copyCentent(target);
+					this.$Events.copyCentent(e);
 				}
 
 				target = target.parentNode; //往上级节点移动

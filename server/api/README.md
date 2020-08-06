@@ -8,3 +8,5 @@ code：
 8001 认证错误 User already exists
 8002 参数错误 Wrong parameter
 8003 服务端错误 Server error
+8004 未知错误 unknown error
+8005 失败 failure

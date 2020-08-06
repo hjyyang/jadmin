@@ -1,0 +1,35 @@
+//滑动过渡
+.slide-enter-active {
+  animation: slide-in 0.8s;
+}
+.slide-leave-active {
+  animation: slide-out 0.5s;
+}
+@keyframes slide-in {
+  0% {
+    transform: translateX(-3%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-3%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+@keyframes slide-out {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(3%);
+    opacity: 0;
+  }
+}

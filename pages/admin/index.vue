@@ -1,7 +1,7 @@
 <template>
 	<main id="admin_page" class="page">
 		<div class="container j_row">
-			<div class="card"></div>
+			<div class="card">test</div>
 			<div class="card side"></div>
 		</div>
 	</main>
@@ -9,7 +9,6 @@
 
 <script>
 export default {
-	name: "home",
 	layout: "admin"
 };
 </script>

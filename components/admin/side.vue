@@ -1,9 +1,9 @@
 <template>
 	<nav id="admin_side" :class="open ? 'isClose': ''">
 		<div class="logo">
-			<nuxt-link to="/">
+			<a href="/">
 				<img src="~/static/logo.png" alt />
-			</nuxt-link>
+			</a>
 		</div>
 		<div class="j_ment">
 			<el-menu
@@ -82,6 +82,7 @@ export default {
 	position: fixed;
 	top: 0;
 	left: 0;
+	z-index: 2;
 	width: 180px;
 	height: 100%;
 	background: #1d1e23;

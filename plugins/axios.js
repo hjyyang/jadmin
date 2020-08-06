@@ -2,16 +2,6 @@ import { MessageBox } from "element-ui";
 
 export default function(app) {
   let axios = app.$axios;
-  //设置axios请求拦截器
-  // app.$axios.interceptors.request.use(config => {
-  // 	console.log(config);
-  // });
-
-  // //设置axios响应拦截器
-  // app.$axios.interceptors.response.use(config => {
-  // 	// console.log(config);
-  // });
-  //此处写法功能与下面到效果一致
   // console.log(process.env.NODE_ENV)
   //   axios.defaults.baseURL =
   //     process.env.NODE_ENV === "development" ? `http://${host}:${port}` : "";

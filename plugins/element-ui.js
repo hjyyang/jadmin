@@ -20,7 +20,10 @@ import {
   RadioButton,
   Popconfirm,
   Form,
-  FormItem
+  FormItem,
+  Upload,
+  MessageBox,
+  Dialog
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/en";
 import locale from "element-ui/lib/locale";
@@ -48,3 +51,7 @@ Vue.use(RadioButton);
 Vue.use(Popconfirm);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Upload);
+Vue.use(Dialog);
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$confirm = MessageBox.confirm;

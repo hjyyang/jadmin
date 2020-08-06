@@ -71,7 +71,6 @@ export default {
 			handler: function(to, from) {
 				//监听路由变化修改body的class
 				this.removeBodyClass();
-                console.log(to)
 				this.pageName =
 					to.name + "-page";
 				this.addBodyClass();
