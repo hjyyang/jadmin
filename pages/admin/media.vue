@@ -23,7 +23,7 @@
 							将文件拖到这里，或者
 							<em>点击上传</em>
 						</div>
-						<div class="el-upload__tip" slot="tip">上传文件大小不能超过3MB</div>
+						<div class="el-upload__tip" slot="tip">上传文件大小不能超过20MB</div>
 						<div
 							slot="file"
 							slot-scope="{file}"
@@ -32,7 +32,7 @@
 							:name="file.name"
 						>
 							<img :src="file.url" v-if="fileType(file.name)=='image'" />
-							<i class="el-icon-video-camera" v-else-if="fileType(file.name)=='video'"></i>
+							<i class="el-icon-video-camera file_icon" v-else-if="fileType(file.name)=='video'"></i>
 							<i class="el-icon-document file_icon" v-else></i>
 							<label class="el-upload-list__item-status-label" v-show="file.status=='success'">
 								<i class="el-icon-upload-success el-icon-check"></i>
@@ -48,6 +48,9 @@
 			<div class="container">
 				<div class="rahmen">
 					<img :src="currentFile.url" v-if="fileType(currentFile.suffix)=='image'" />
+					<template v-else-if="fileType(currentFile.suffix)=='video'">
+                        <video :src="currentFile.url" controls width="100%"></video>
+                    </template>
 				</div>
 				<div class="detail">
 					<div class="row">
@@ -142,11 +145,11 @@ export default {
 			}
 		},
 		beforeAvatarUpload(file) {
-			const isLt3M = file.size / 1024 / 1024 < 3;
-			if (!isLt3M) {
-				this.$message.error("上传文件大小不能超过 3MB!");
+			const isLt20M = file.size / 1024 / 1024 < 3;
+			if (!isLt20M) {
+				this.$message.error("上传文件大小不能超过 20MB!");
 			}
-			return isLt3M;
+			return isLt20M;
 		},
 		//自定义上传事件
 		uploadFile(file) {
@@ -196,7 +199,7 @@ export default {
 		fileType(value) {
 			if (!value) return false;
 			let img = /(png|jpg|gif|jpeg|svg)$/i,
-				video = /(mp3|mp4|avi)$/i;
+				video = /(mp3|mp4|avi|ogv)$/i;
 			if (!value) {
 				throw "File format error";
 			}

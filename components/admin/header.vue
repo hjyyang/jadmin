@@ -4,12 +4,15 @@
 			<div class="header_trigger" @click="sideHide">
 				<i class="el-icon-s-fold"></i>
 			</div>
+			<div class="message">
+				<i class="el-icon-message-solid"></i>
+			</div>
 			<div class="user">
 				<el-dropdown @command="handleCommand">
 					<el-avatar :size="'medium'" :src="avatar" icon="el-icon-s-custom"></el-avatar>
 					<el-dropdown-menu slot="dropdown" class="app_dropdown">
-						<el-dropdown-item icon="el-icon-user" command="/about-me">我的资料</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-switch-button" command="/logout">注销</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-user" command="/about-me">我的</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-switch-button" command="/logout">退出</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</div>
@@ -36,14 +39,22 @@ export default {
 		},
 		handleCommand(command){
 			if(command == "/logout"){
-				this.$store.dispatch("logout");
-				this.$message({
-					type: "success",
-					message: "已退出!"
-				});
-				this.$router.push({
-					path: "/"
+                this.$confirm("确定退出登录吗?", "提示", {
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+				type: "warning"
+			})
+				.then(() => {
+					this.$store.dispatch("logout");
+                    this.$message({
+                        type: "success",
+                        message: "已退出!"
+                    });
+                    this.$router.push({
+                        path: "/"
+                    })
 				})
+				.catch(() => {});
 			}else{
 				this.$router.push({
 					path: command
@@ -74,7 +85,7 @@ export default {
 		width: 100%;
 	}
 	.user {
-		margin-left: auto;
+		margin-left: 20px;
 		margin-right: 20px;
 	}
 	.header_trigger {
@@ -88,6 +99,15 @@ export default {
 		&:hover {
 			background: rgba(246, 202, 157, 0.05);
 		}
+	}
+	.message {
+		width: 36px;
+		height: 36px;
+		line-height: 36px;
+		margin-left: auto;
+		text-align: center;
+		font-size: 20px;
+		color: #ffffff;
 	}
 }
 </style>

@@ -10,6 +10,18 @@ const router = new Router({
   prefix: "/j_api/user"
 });
 
+//用户退出
+router.get("/logout", async ctx => {
+  ctx.cookies.set("authUser", "", {
+    maxAge: 0,
+    overwrite: true
+  });
+  ctx.body = {
+    code: 8888,
+    message: "successful"
+  };
+});
+
 //用户列表
 router.get("/list", async ctx => {
   let { page } = ctx.request.query;
@@ -45,6 +57,12 @@ router.get("/list", async ctx => {
     u_list: dbRes.rows,
     count: dbRes.count
   };
+});
+
+//修改用户信息
+router.post("/update", async ctx => {
+  //   let {} = ctx.request.body;
+  ctx.body = "";
 });
 
 module.exports = router;

@@ -190,7 +190,7 @@ var storage = multer.diskStorage({
 var upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 3 // 限制2M
+    fileSize: 1024 * 1024 * 20 // 限制20M
   }
 });
 

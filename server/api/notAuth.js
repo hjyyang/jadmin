@@ -147,15 +147,4 @@ router.post("/login", async ctx => {
   });
 });
 
-//用户退出
-router.get("/logout", async ctx => {
-  ctx.cookies.set("authUser", "", {
-    maxAge: 0,
-    overwrite: true
-  });
-  ctx.body = {
-    code: 8888,
-    message: "successful"
-  };
-});
 module.exports = router;

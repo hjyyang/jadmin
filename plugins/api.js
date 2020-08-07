@@ -30,7 +30,7 @@ const request = {
   //用户注册"
   signin: new Api("/no_auth/user/signin", "post"),
   //用户注销
-  logout: new Api("/no_auth/user/logout"),
+  logout: new Api("/j_api/user/logout"),
 
   /**********************************文档接口************************************/
   //获取文档列表

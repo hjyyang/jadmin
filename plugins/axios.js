@@ -2,9 +2,6 @@ import { MessageBox } from "element-ui";
 
 export default function(app) {
   let axios = app.$axios;
-  // console.log(process.env.NODE_ENV)
-  //   axios.defaults.baseURL =
-  //     process.env.NODE_ENV === "development" ? `http://${host}:${port}` : "";
 
   axios.onRequest(config => {
     // console.log('请求拦截')
