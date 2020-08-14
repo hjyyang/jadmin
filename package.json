@@ -17,6 +17,7 @@
     "cookieparser": "^0.1.0",
     "cross-env": "^5.2.0",
     "element-ui": "^2.4.11",
+    "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.3.0",

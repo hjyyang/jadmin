@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const User = require("../lib/orm").User;
+const redis = require("../lib/redis");
 //引入校验器校验请求参数
 const validator = require("validator");
 
@@ -62,7 +63,8 @@ router.get("/list", async ctx => {
 //修改用户信息
 router.post("/update", async ctx => {
   //   let {} = ctx.request.body;
-  ctx.body = "";
+  let res = await redis.get("test");
+  ctx.body = res;
 });
 
 module.exports = router;
