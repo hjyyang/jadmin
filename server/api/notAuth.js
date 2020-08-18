@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const User = require("../lib/orm").User;
+const redis = require("../lib/redis");
 //引入md5加密
 const md5 = require("md5-node");
 //引入校验器校验请求参数
@@ -135,6 +136,9 @@ router.post("/login", async ctx => {
         maxAge: tokenOp.validTime,
         overwrite: true
       });
+
+      //删除redis中的id
+      await redis.srem("infoChangeUser", dbRes.id);
     }
   } catch (err) {
     console.log(err);

@@ -46,7 +46,10 @@ const request = {
   uploadFile: new Api("/j_api/file/upload", "post"),
   findFile: new Api("/j_api/file/find"),
   deteleFile: new Api("/j_api/file/delete"),
-  updateFile: new Api("/j_api/file/update")
+  updateFile: new Api("/j_api/file/update"),
+
+  /**********************************普通用户可访问接口************************************/
+  userInfo: new Api("/j_api/simple/user/info"),
 };
 let axios = null;
 export default function({ $axios }, inject) {
