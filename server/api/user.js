@@ -15,24 +15,12 @@ const router = new Router({
   prefix: "/j_api/user"
 });
 
-//用户退出
-router.get("/logout", async ctx => {
-  ctx.cookies.set("authUser", "", {
-    maxAge: 0,
-    overwrite: true
-  });
-  ctx.body = {
-    code: 8888,
-    message: "successful"
-  };
-});
-
 //用户列表
 router.get("/list", async ctx => {
   let { page } = ctx.request.query;
   page = page ? page + "" : "";
 
-  if (!validator.isInt(page) && validator.isEmpty(page)) {
+  if (!validator.isInt(page) || validator.isEmpty(page)) {
     return (ctx.body = {
       code: 8002,
       message: "Wrong parameter"

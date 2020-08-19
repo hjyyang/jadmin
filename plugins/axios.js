@@ -1,5 +1,3 @@
-import { MessageBox } from "element-ui";
-
 export default function(app) {
   let axios = app.$axios;
 
@@ -21,17 +19,7 @@ export default function(app) {
       app.redirect("/400");
     }
     if (code === 401) {
-      MessageBox.confirm("未登录或用户信息过期", "提示", {
-        confirmButtonText: "去登录",
-        cancelButtonText: "去首页",
-        type: "warning"
-      })
-        .then(() => {
-          app.redirect("/login");
-        })
-        .catch(() => {
-          app.redirect("/");
-        });
+      app.redirect("/login?is_redirect=true");
     }
   });
 }

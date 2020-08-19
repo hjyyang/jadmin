@@ -15,7 +15,14 @@ export default {
     },
     methods:{
         async getInfo(){
-            await this.$request.userInfo();
+            let user = this.$store.state.authUser;
+            if(user){
+                await this.$request.userInfo({
+                    uid: user.u_id
+                });
+            }else{
+                this.$router.push("/login?redirect=/about-me");
+            }
         }
     }
 };

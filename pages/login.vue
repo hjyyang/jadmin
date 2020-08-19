@@ -59,6 +59,15 @@ export default {
 		};
 	},
 	mounted() {
+        if(this.$route.query.is_redirect){
+            if(!!this.$store.state.authUser){
+                //用户信息改变
+                this.$message.error("用户登录信息已过期");
+            }
+        }
+        if(!!this.$route.query.redirect){
+            this.$message.error("用户未登录");
+        }
     },
 	methods: {
 		submitForm(formName) {
