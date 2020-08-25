@@ -6,8 +6,8 @@ let jColor = {
   currentColor: ""
 };
 
-export default function({ $axios, nuxtState, $request }, inject) {
-  //   if (nuxtState.layout != "admin") {
+export default function(app, inject) {
+  //   if (nuxtState.layout != "admin") {{ $axios, nuxtState, $request }
   let jCssText = `
         --bg: ${jColor.bg};
         --btn: ${jColor.btn};

@@ -9,7 +9,9 @@
 			</div>
 			<div class="user">
 				<el-dropdown @command="handleCommand">
-					<el-avatar :size="'medium'" :src="avatar" icon="el-icon-s-custom"></el-avatar>
+					<el-avatar class="face" :size="36" :src="avatar" @error="true">
+						<i class="el-icon-s-custom"></i>
+					</el-avatar>
 					<el-dropdown-menu slot="dropdown" class="app_dropdown">
 						<el-dropdown-item icon="el-icon-user" command="/about-me">我的</el-dropdown-item>
 						<el-dropdown-item icon="el-icon-switch-button" command="/logout">退出</el-dropdown-item>

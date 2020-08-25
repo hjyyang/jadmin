@@ -23,7 +23,9 @@ import {
   FormItem,
   Upload,
   MessageBox,
-  Dialog
+  Dialog,
+  Tag,
+  Pagination
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/en";
 import locale from "element-ui/lib/locale";
@@ -53,5 +55,7 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Upload);
 Vue.use(Dialog);
+Vue.use(Tag);
+Vue.use(Pagination);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$confirm = MessageBox.confirm;

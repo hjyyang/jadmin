@@ -37,7 +37,8 @@ router.get("/list", async ctx => {
       ["role", "u_role"],
       ["authEmail", "authEmail"],
       ["sex", "u_sex"],
-      ["face", "u_face"]
+      ["face", "u_face"],
+      ["qq", "qq"]
     ],
     offset: offset * 10,
     limit: 10,

@@ -47,7 +47,8 @@ let User = sequelize.define(
       type: Sequelize.STRING,
       defaultValue: "no_gender"
     },
-    face: Sequelize.STRING
+    face: Sequelize.STRING,
+    qq: Sequelize.STRING
   },
   {
     timestamps: false,

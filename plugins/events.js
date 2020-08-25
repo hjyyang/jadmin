@@ -4,7 +4,7 @@ class Events {
   copyCentent(e) {
     try {
       let ev = e || window.event,
-        target = ev.target || ev.srcElement;
+        target = ev.target || ev.srcElement || ev;
       let selection = window.getSelection();
       selection.removeAllRanges();
       let range = document.createRange();

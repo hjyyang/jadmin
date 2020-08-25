@@ -32,7 +32,7 @@ const request = {
   //获取用户列表
   userList: new Api("/j_api/user/list"),
   //修改用户信息
-  updateUser: new Api("/j_api/user/update"),
+  updateUser: new Api("/j_api/user/update", "post"),
   //用户注销
   logout: new Api("/j_api/simple/user_logout"),
   //获取用户信息
@@ -61,7 +61,7 @@ const request = {
   /**********************************普通用户可访问接口************************************/
 };
 let axios = null;
-export default function({ $axios }, inject) {
-  axios = $axios;
+export default function(app, inject) {
+  axios = app.$axios;
   inject("request", request);
 }

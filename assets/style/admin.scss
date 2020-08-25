@@ -30,3 +30,12 @@
 .el-popconfirm__main {
   margin-bottom: 4px;
 }
+
+.paged {
+  display: flex;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  .el-pagination {
+    margin: 0 auto;
+  }
+}
