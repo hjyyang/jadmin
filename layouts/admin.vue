@@ -26,6 +26,7 @@ export default {
 	mounted() {
 		//挂载时修改body的class
 		this.addBodyClass();
+        document.body.classList.add("admin");
 		//新增窗口大小响应监听
 		this.resize(true);
 		//默认执行一次窗口大小判断
@@ -34,6 +35,7 @@ export default {
 	beforeDestroy() {
 		//销毁前去除body的class
 		this.removeBodyClass();
+        document.body.classList.remove("admin");
 		//去除窗口大小响应监听
 		this.resize(false);
 	},

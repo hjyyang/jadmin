@@ -21,6 +21,9 @@ html {
 body {
   height: 100%;
   overflow: hidden;
+  &.admin {
+    background-color: #f5f7f9;
+  }
 }
 
 #__nuxt,
@@ -35,10 +38,16 @@ img {
   margin: auto;
 }
 
+ol,
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
 .client {
   background-color: var(--bg);
 }
 
-.el-avatar.face{
-    font-size: 18px;
+.el-avatar.face {
+  font-size: 18px;
 }

@@ -19,24 +19,10 @@
 					<i class="el-icon-s-data"></i>
 					<span>数据</span>
 				</el-menu-item>
-				<el-submenu index="/admin/post">
-					<template slot="title">
-						<i class="el-icon-edit-outline"></i>
-						<span>文章</span>
-					</template>
-					<el-menu-item index="/admin/post">
-						<i class="el-icon-tickets"></i>
-						<span>列表</span>
-					</el-menu-item>
-					<el-menu-item index="/admin/post/edit">
-						<i class="el-icon-circle-plus"></i>
-						<span>新增</span>
-					</el-menu-item>
-					<el-menu-item index="/admin/class">
-						<i class="el-icon-menu"></i>
-						<span>分类</span>
-					</el-menu-item>
-				</el-submenu>
+				<el-menu-item index="/admin/post">
+					<i class="el-icon-picture"></i>
+					<span>文章</span>
+				</el-menu-item>
 				<el-menu-item index="/admin/media">
 					<i class="el-icon-picture"></i>
 					<span>媒体</span>
