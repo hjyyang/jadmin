@@ -20,7 +20,7 @@ export default {
 		return {
 			pageName:
 				this.$route.name + "-page",
-			sideOPen: false
+			sideOPen: true
 		};
 	},
 	mounted() {
@@ -28,16 +28,16 @@ export default {
 		this.addBodyClass();
         document.body.classList.add("admin");
 		//新增窗口大小响应监听
-		this.resize(true);
+		// this.resize(true);
 		//默认执行一次窗口大小判断
-        this.handleEvent();
+        // this.handleEvent();
 	},
 	beforeDestroy() {
 		//销毁前去除body的class
 		this.removeBodyClass();
         document.body.classList.remove("admin");
 		//去除窗口大小响应监听
-		this.resize(false);
+		// this.resize(false);
 	},
 	methods: {
 		addBodyClass() {

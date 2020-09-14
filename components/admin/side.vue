@@ -20,7 +20,7 @@
 					<span>数据</span>
 				</el-menu-item>
 				<el-menu-item index="/admin/post">
-					<i class="el-icon-picture"></i>
+					<i class="el-icon-edit-outline"></i>
 					<span>文章</span>
 				</el-menu-item>
 				<el-menu-item index="/admin/media">
@@ -56,10 +56,10 @@ export default {
 	props: {
 		open: {
 			type: Boolean,
-			default: false
-		}
+			default: false,
+		},
 	},
-	methods: {}
+	methods: {},
 };
 </script>
 

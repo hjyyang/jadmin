@@ -13,8 +13,8 @@
 						:key="index"
 						:data-index="index"
 					>
-						<div>基本设置</div>
-						<span>网站信息设置</span>
+						<div>{{ item.title }}</div>
+						<span>{{ item.synopsis }}</span>
 					</li>
 				</ul>
 			</div>
@@ -24,6 +24,11 @@
 				<transition name="fade" mode="out-in">
 					<div class="item" v-show="currentTab==0">
 						<h4>基本设置</h4>
+						<div class="col">
+							<div class="row">
+
+                            </div>
+						</div>
 					</div>
 				</transition>
 				<transition name="fade" mode="out-in">
@@ -38,34 +43,37 @@
 
 <script>
 export default {
-    layout: "admin",
-    transition: "slide",
-    data(){
-        return {
-            currentTab: 0,
-            configGroup: [{
-                title:"基本设置",
-                synopsis:"网站信息设置"
-            },{
-                title:"样式设置",
-                synopsis:"网站样式设置"
-            }]
-        }
-    },
-    methods:{
-        changeTab(e){
-            let self = this;
-            this.$Events.eventAgent(e,{
-                elClass: "config",
-                target: "item",
-                handle: function(e){
-                    if(e.dataset.index==self.currentTab) return false;
-                    self.currentTab=e.dataset.index;
-                }
-            });
-        }
-    }
-}
+	layout: "admin",
+	transition: "slide",
+	data() {
+		return {
+			currentTab: 0,
+			configGroup: [
+				{
+					title: "基本设置",
+					synopsis: "网站信息设置",
+				},
+				{
+					title: "样式设置",
+					synopsis: "网站样式设置",
+				},
+			],
+		};
+	},
+	methods: {
+		changeTab(e) {
+			let self = this;
+			this.$Events.eventAgent(e, {
+				elClass: "config",
+				target: "item",
+				handle: function (e) {
+					if (e.dataset.index == self.currentTab) return false;
+					self.currentTab = e.dataset.index;
+				},
+			});
+		},
+	},
+};
 </script>
 
 <style lang="scss" scoped>
@@ -127,6 +135,9 @@ export default {
 		margin-bottom: 20px;
 		border-radius: 5px;
 		background-color: #ffffff;
+	}
+	.col {
+		width: 50%;
 	}
 }
 </style>
