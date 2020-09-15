@@ -22,18 +22,44 @@
 		<div class="content">
 			<div class="content-wrap">
 				<transition name="fade" mode="out-in">
-					<div class="item" v-show="currentTab==0">
+					<div class="item" v-show="currentTab==1">
 						<h4>基本设置</h4>
 						<div class="col">
-							<div class="row">
-
-                            </div>
+							<div class="row"></div>
 						</div>
 					</div>
 				</transition>
 				<transition name="fade" mode="out-in">
-					<div class="item" v-show="currentTab==1">
+					<div class="item" v-show="currentTab==2">
+						<h4>菜单设置</h4>
+						<div class="col">
+							<div class="row"></div>
+						</div>
+					</div>
+				</transition>
+				<transition name="fade" mode="out-in">
+					<div class="item" v-show="currentTab==0">
 						<h4>样式设置</h4>
+						<div class="col">
+							<div class="row">
+								<span>字体</span>
+								<el-select v-model="fontValue" placeholder="请选择">
+									<el-option v-for="(item,key,index) in fonts" :key="index" :label="item" :value="key"></el-option>
+								</el-select>
+							</div>
+							<div class="row">
+								<span>背景色</span>
+								<el-color-picker v-model="bgcolor"></el-color-picker>
+							</div>
+							<div class="row">
+								<span>字体颜色</span>
+								<el-color-picker v-model="color"></el-color-picker>
+							</div>
+							<div class="row">
+								<span>active 字体颜色</span>
+								<el-color-picker v-model="activeColor"></el-color-picker>
+							</div>
+						</div>
 					</div>
 				</transition>
 			</div>
@@ -57,7 +83,47 @@ export default {
 					title: "样式设置",
 					synopsis: "网站样式设置",
 				},
+				{
+					title: "菜单设置",
+					synopsis: "网站导航菜单设置",
+				},
 			],
+			bgcolor: "#409EFF",
+			color: "#000000",
+			fonts: {
+				STHeiti: "华文黑体",
+				STKaiti: "华文楷体",
+				STSong: "华文宋体",
+				STFangsong: "华文仿宋",
+				LiHeiProMedium: "俪黑Pro",
+				LiSongProLight: "俪宋Pro",
+				BiauKai: "标楷体",
+				AppleLiGothicMedium: "苹果俪中黑",
+				AppleLiSungLight: "苹果俪細宋",
+				PMingLiU: "新细明体",
+				MingLiU: "细明体",
+				SimHei: "黑体",
+				SimSun: "宋体",
+				NSimSun: "新宋体",
+				FangSong: "仿宋",
+				KaiTi: "楷体",
+				LiSu: "隶书",
+				YouYuan: "幼圆",
+				STXihei: "华文细黑",
+				STKaiti: "华文楷体",
+				STSong: "华文宋体",
+				STZhongsong: "华文中宋",
+				STFangsong: "华文仿宋",
+				FZShuTi: "方正舒体",
+				FZYaoti: "方正姚体",
+				STCaiyun: "华文彩云",
+				STHupo: "华文琥珀",
+				STLiti: "华文隶书",
+				STXingkai: "华文行楷",
+				STXinwei: "华文新魏",
+			},
+			fontValue: "STXinwei",
+			activeColor: "",
 		};
 	},
 	methods: {
@@ -125,6 +191,7 @@ export default {
 		position: relative;
 	}
 	h4 {
+		margin-bottom: 15px;
 		font-size: 18px;
 		color: #515a6e;
 	}
@@ -138,6 +205,16 @@ export default {
 	}
 	.col {
 		width: 50%;
+	}
+	.row {
+		margin-bottom: 15px;
+		span {
+			display: block;
+			margin-bottom: 6px;
+		}
+		&:last-of-type {
+			margin-bottom: 0;
+		}
 	}
 }
 </style>

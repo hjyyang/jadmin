@@ -25,9 +25,14 @@ import {
   MessageBox,
   Dialog,
   Tag,
-  Pagination
+  Pagination,
+  ColorPicker,
+  Select,
+  Option,
+  ButtonGroup,
+  DatePicker
 } from "element-ui";
-import lang from "element-ui/lib/locale/lang/en";
+import lang from "element-ui/lib/locale/lang/zh-CN";
 import locale from "element-ui/lib/locale";
 
 locale.use(lang);
@@ -57,5 +62,10 @@ Vue.use(Upload);
 Vue.use(Dialog);
 Vue.use(Tag);
 Vue.use(Pagination);
+Vue.use(ColorPicker);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(ButtonGroup);
+Vue.use(DatePicker);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$confirm = MessageBox.confirm;

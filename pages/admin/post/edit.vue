@@ -2,8 +2,9 @@
 
 <script>
 export default {
-
-}
+	layout: "admin",
+	transition: "slide",
+};
 </script>
 
 <style>
