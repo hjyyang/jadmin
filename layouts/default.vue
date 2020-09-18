@@ -1,14 +1,20 @@
 <template>
 	<div id="default_layout">
+		<Header />
 		<nuxt />
+		<div style="height:1000px;"></div>
 	</div>
 </template>
 
 <script>
+import Header from "~/components/header";
 export default {
+	components: {
+		Header,
+	},
 	data() {
 		return {
-			pageName: this.$route.name + "-page"
+			pageName: this.$route.name + "-page",
 		};
 	},
 	methods: {
@@ -19,7 +25,7 @@ export default {
 		removeBodyClass() {
 			document.body.classList.remove(this.pageName);
 			document.body.classList.remove("client");
-		}
+		},
 	},
 	mounted() {
 		//挂载时修改body的class
@@ -31,15 +37,15 @@ export default {
 	},
 	watch: {
 		$route: {
-			handler: function(to, from) {
+			handler: function (to, from) {
 				//监听路由变化修改body的class
 				this.removeBodyClass();
 				this.pageName = to.name + "-page";
 				this.addBodyClass();
 			},
 			// 深度观察监听
-			deep: true
-		}
-	}
+			deep: true,
+		},
+	},
 };
 </script>

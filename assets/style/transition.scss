@@ -48,3 +48,49 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+//tab翻页效果
+.tab-slide-left-enter-active {
+  animation: tab-slide-left-in 0.4s;
+}
+.tab-slide-left-leave-active {
+  animation: tab-slide-left-out 0.4s;
+}
+.tab-slide-right-enter-active {
+  animation: tab-slide-right-in 0.4s;
+}
+.tab-slide-right-leave-active {
+  animation: tab-slide-right-out 0.4s;
+}
+@keyframes tab-slide-left-in {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes tab-slide-left-out {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes tab-slide-right-in {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes tab-slide-right-out {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
