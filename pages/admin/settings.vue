@@ -43,7 +43,7 @@
 						<div class="col">
 							<div class="row">
 								<span>字体</span>
-								<el-select v-model="fontValue" placeholder="请选择">
+								<el-select v-model="fontValue" placeholder="请选择" size="small">
 									<el-option v-for="(item,key,index) in fonts" :key="index" :label="item" :value="key"></el-option>
 								</el-select>
 							</div>

@@ -1,9 +1,11 @@
-<template></template>
+<template>
+    <div class="edit-page">sssss</div>
+</template>
 
 <script>
 export default {
-	layout: "admin",
-	transition: "slide",
+	layout: "edit",
+	transition: "fade",
 };
 </script>
 
