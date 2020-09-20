@@ -16,6 +16,7 @@
     "@nuxtjs/axios": "^5.11.0",
     "cookieparser": "^0.1.0",
     "cross-env": "^5.2.0",
+    "echarts": "^4.9.0",
     "element-ui": "^2.4.11",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
