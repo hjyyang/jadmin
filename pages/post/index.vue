@@ -31,7 +31,7 @@
 					<el-input placeholder="请输入..." size="small" suffix-icon="el-icon-search" v-model="search"></el-input>
 				</div>
 			</div>
-			<nuxt-link to="/admin/post/edit" class="add">
+			<nuxt-link to="/post/edit" class="add">
 				<i class="el-icon-circle-plus"></i>添加
 			</nuxt-link>
 			<div class="list">
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div class="col edit">
-						<nuxt-link to="/admin/post/edit">编辑</nuxt-link>
+						<nuxt-link to="/post/edit">编辑</nuxt-link>
 					</div>
 					<div class="col more">
 						<el-dropdown @command="handleCommand">
@@ -83,7 +83,6 @@
 
 <script>
 export default {
-	layout: "admin",
 	transition: "slide",
 	data() {
 		return {

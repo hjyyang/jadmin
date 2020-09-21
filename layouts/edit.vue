@@ -15,11 +15,9 @@ export default {
 	methods: {
 		addBodyClass() {
 			document.body.classList.add(this.pageName);
-			document.body.classList.add("client");
 		},
 		removeBodyClass() {
 			document.body.classList.remove(this.pageName);
-			document.body.classList.remove("client");
 		},
 	},
 	mounted() {

@@ -4,7 +4,7 @@ export default function({ app, req, store, error, redirect, route }) {
   } else {
     if (store.state.authUser.u_role == 0) {
       //普通用户无法访问admin页面
-      return redirect("/about-me?is_redirect=true");
+      return redirect("/304");
     }
   }
 }

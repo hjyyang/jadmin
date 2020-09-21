@@ -128,10 +128,9 @@
 
 <script>
 export default {
-	layout: "admin",
 	transition: "slide",
 	head: {
-		title: "jadmin-document"
+		title: "jadmin-document",
 	},
 	data() {
 		return {
@@ -140,12 +139,12 @@ export default {
 			method: {
 				//请求方法
 				Get: 1,
-				Post: 2
+				Post: 2,
 			},
 			editState: false, //编辑框是否显示
 			isAdmin: this.$store.state.authUser.u_role > 1, //判断是否为超级管理员
 			isChange: false, //是否有改变列表数据
-			listDataStr: "" //列表数据序列化字符串
+			listDataStr: "", //列表数据序列化字符串
 		};
 	},
 	methods: {
@@ -163,12 +162,12 @@ export default {
 					method: apiItem.method,
 					describe: apiItem.describe,
 					title: apiItem.title,
-					parameters: apiItem.parameters
+					parameters: apiItem.parameters,
 				});
 				if (res.data.code == 8888) {
 					this.$message({
 						message: "已修改",
-						type: "success"
+						type: "success",
 					});
 					this.listDataStr = JSON.stringify(this.listData);
 					this.editState = !this.editState;
@@ -190,7 +189,7 @@ export default {
 			//删除api
 			console.log(key, index, id);
 			let res = await this.$request.removeDomList({
-				rid: id
+				rid: id,
 			});
 			if (res.data.code == 8888) {
 				//删除成功
@@ -199,7 +198,7 @@ export default {
 				this.listDataStr = JSON.stringify(this.listData);
 				this.$message({
 					message: "已删除",
-					type: "success"
+					type: "success",
 				});
 			} else {
 				this.$message.error("删除失败");
@@ -212,13 +211,13 @@ export default {
 				describe: "",
 				method: "Get",
 				path: "/no_auth",
-				parameters: []
+				parameters: [],
 			};
 			let res = await this.$request.addDomList({
 				title: key,
 				describe: "",
 				method: "Get",
-				path: "/no_auth"
+				path: "/no_auth",
 			});
 			if (res.data.code == 8888) {
 				this.listDataStr = JSON.stringify(this.listData);
@@ -283,7 +282,7 @@ export default {
 					requireds: false,
 					value: "",
 					type: "String",
-					name: ""
+					name: "",
 				};
 			if (lock) {
 				//添加参数
@@ -294,7 +293,7 @@ export default {
 				parArr.splice(parIndex, 1);
 			}
 			this.isChangeEv();
-		}
+		},
 	},
 	mounted() {
 		this.getData();
@@ -306,7 +305,7 @@ export default {
 			this.clickListener,
 			false
 		);
-	}
+	},
 };
 </script>
 

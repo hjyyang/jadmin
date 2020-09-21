@@ -29,8 +29,8 @@
 
 <script>
 export default {
-	layout: "member",
-	// middleware: "noAuthorization",
+    layout: "member",
+    // middleware: "no_auth",
 	data() {
 		var validatePass = (rule, value, callback) => {
 			if (value === "") {

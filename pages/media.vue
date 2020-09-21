@@ -49,8 +49,8 @@
 				<div class="rahmen">
 					<img :src="currentFile.url" v-if="fileType(currentFile.suffix)=='image'" />
 					<template v-else-if="fileType(currentFile.suffix)=='video'">
-                        <video :src="currentFile.url" controls width="100%"></video>
-                    </template>
+						<video :src="currentFile.url" controls width="100%"></video>
+					</template>
 				</div>
 				<div class="detail">
 					<div class="row">
@@ -92,7 +92,6 @@
 
 <script>
 export default {
-	layout: "admin",
 	transition: "slide",
 	data() {
 		return {
@@ -106,12 +105,12 @@ export default {
 				name: "",
 				url: "",
 				suffix: "",
-				size: 0
+				size: 0,
 			},
 			currentIndex: 0,
 			editStatus: false, //文件详情编辑状态
 			oldName: "",
-			saveStatus: false
+			saveStatus: false,
 		};
 	},
 	mounted() {
@@ -125,7 +124,7 @@ export default {
 			this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
 				confirmButtonText: "确定",
 				cancelButtonText: "取消",
-				type: "warning"
+				type: "warning",
 			})
 				.then(() => {
 					this.deleteFile(file);
@@ -134,13 +133,13 @@ export default {
 		},
 		async deleteFile(file) {
 			let res = await this.$request.deteleFile({
-				url: file.url
+				url: file.url,
 			});
 			if (res.data.code === 8888) {
 				this.fileList.splice(this.fileList.indexOf(file), 1);
 				this.$message({
 					type: "success",
-					message: "删除成功!"
+					message: "删除成功!",
 				});
 			}
 		},
@@ -154,7 +153,7 @@ export default {
 		//自定义上传事件
 		uploadFile(file) {
 			if (file.data) {
-				Object.keys(file.data).forEach(key => {
+				Object.keys(file.data).forEach((key) => {
 					this.formData.append(key, file.data[key]);
 				});
 			}
@@ -170,7 +169,7 @@ export default {
 								e.percent = (e.loaded / e.total) * 100;
 							}
 							file.onProgress(e);
-						}
+						},
 					});
 					self.formData = new FormData();
 					if (res.data.code == 8888) {
@@ -246,7 +245,7 @@ export default {
 					try {
 						let res = await this.$request.updateFile({
 							url: oldUrl,
-							newUrl: newUrl
+							newUrl: newUrl,
 						});
 						console.log(res.data);
 						if (res.data.code === 8888) {
@@ -288,8 +287,8 @@ export default {
 			fileObj.name = fileObj.fullName.split(".")[0];
 			fileObj.suffix = fileObj.fullName.split(".")[1];
 			return fileObj;
-		}
-	}
+		},
+	},
 };
 </script>
 

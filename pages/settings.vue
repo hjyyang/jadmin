@@ -69,7 +69,6 @@
 
 <script>
 export default {
-	layout: "admin",
 	transition: "slide",
 	data() {
 		return {

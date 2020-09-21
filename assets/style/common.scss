@@ -18,15 +18,10 @@ html {
 
 body {
   height: 100%;
-  //   overflow: hidden;
-  //   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-  //     STXinwei, "Helvetica Neue", Arial, sans-serif;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "微软雅黑", "Microsoft YaHei", Arial, sans-serif;
   overflow-x: hidden;
-  &.admin {
-    background-color: #f5f7f9;
-  }
+  background-color: #f5f7f9;
 }
 
 #__nuxt,
@@ -45,10 +40,6 @@ ol,
 ul {
   padding: 0;
   list-style-type: none;
-}
-
-.client {
-  background-color: var(--bg);
 }
 
 .el-avatar.face {

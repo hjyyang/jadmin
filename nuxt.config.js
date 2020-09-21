@@ -52,10 +52,6 @@ module.exports = {
       ssr: true
     },
     {
-      src: "@/plugins/variable-color",
-      ssr: false
-    },
-    {
       src: "@/plugins/events",
       ssr: false
     }

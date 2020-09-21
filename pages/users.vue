@@ -67,58 +67,57 @@
 
 <script>
 export default {
-    layout: "admin",
-    transition: "slide",
-    data(){
-        return{
-            showItemHandle: null,
-            userList: [],
-            myRole: 1,
-            myId: null
-        }
-    },
-    created(){
-        this.getUserList(1);
-    },
-    mounted(){
-        this.myRole = this.$store.state.authUser.u_role;
-        this.myId = this.$store.state.authUser.u_id;
-    },
-    methods: {
-        copyHandle(e){
-            this.$Events.copyCentent(e.path[2].querySelector("span"));
-        },
-        openHandle(index){
-            if(this.showItemHandle == index){
-                this.showItemHandle = null;
-            }else{
-                this.showItemHandle = index;
-            }
-        },
-        async getUserList(page){
-            let res = await this.$request.userList({
-                page: page
-            });
-            console.log(res.data)
-            if(res.data.code==8888){
-                this.userList = res.data.u_list;
-            }
-        },
-        currentChange(page){
-            this.getUserList(page);
-        },
-        async changeRole(uid,role,index){
-            let res = await this.$request.updateUser({
-                uid: uid,
-                role: role
-            });
-            console.log(res.data)
-            if(res.data.code===8888){
-                this.userList[index].u_role = role;
-            }
-        }
-    }
-}
+	transition: "slide",
+	data() {
+		return {
+			showItemHandle: null,
+			userList: [],
+			myRole: 1,
+			myId: null,
+		};
+	},
+	created() {
+		this.getUserList(1);
+	},
+	mounted() {
+		this.myRole = this.$store.state.authUser.u_role;
+		this.myId = this.$store.state.authUser.u_id;
+	},
+	methods: {
+		copyHandle(e) {
+			this.$Events.copyCentent(e.path[2].querySelector("span"));
+		},
+		openHandle(index) {
+			if (this.showItemHandle == index) {
+				this.showItemHandle = null;
+			} else {
+				this.showItemHandle = index;
+			}
+		},
+		async getUserList(page) {
+			let res = await this.$request.userList({
+				page: page,
+			});
+			console.log(res.data);
+			if (res.data.code == 8888) {
+				this.userList = res.data.u_list;
+			}
+		},
+		currentChange(page) {
+			this.getUserList(page);
+		},
+		async changeRole(uid, role, index) {
+			let res = await this.$request.updateUser({
+				uid: uid,
+				role: role,
+			});
+			console.log(res.data);
+			if (res.data.code === 8888) {
+				this.userList[index].u_role = role;
+			}
+		},
+	},
+};
 </script>
 
 <style lang="scss" scoped>
