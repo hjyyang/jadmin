@@ -1,5 +1,7 @@
 <template>
-    <div class="edit-page">sssss</div>
+    <div class="edit-page">
+        
+    </div>
 </template>
 
 <script>

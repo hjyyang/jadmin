@@ -6,7 +6,6 @@
 
 <script>
 export default {
-	transition: "fade",
 	data() {
 		return {
 			pageName: this.$route.name + "-page",

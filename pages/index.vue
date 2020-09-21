@@ -347,7 +347,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#admin-page {
+#admin-page.page {
+	padding: 15px 5px;
 	.line-data {
 		display: flex;
 		.card {
@@ -422,7 +423,7 @@ export default {
 		color: #ffffff;
 	}
 	&:hover {
-		background-color: #2d8cf0;
+		background-color: #4998ec;
 	}
 }
 .linear-wrap {
@@ -434,23 +435,7 @@ export default {
 	.col {
 		display: flex;
 		align-items: center;
-		margin-right: 30px;
 		color: #7c7c7c;
-		&.pv {
-			.chunk {
-				background-color: #2d8cf0;
-			}
-		}
-		&.leave {
-			.chunk {
-				background-color: rgb(92, 219, 211);
-			}
-		}
-		&.comment {
-			.chunk {
-				background-color: rgb(255, 156, 110);
-			}
-		}
 		&.newly {
 			.chunk {
 				background-color: rgb(149, 222, 100);
@@ -498,6 +483,12 @@ table {
 			padding-left: 15px;
 			div {
 				background-color: #dcebfe;
+			}
+		}
+		a {
+			color: #4998ec;
+			&:hover {
+				color: #7fb3eb;
 			}
 		}
 	}

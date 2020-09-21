@@ -85,7 +85,7 @@ export default {
 	},
 	methods: {
 		copyHandle(e) {
-			this.$Events.copyCentent(e.path[2].querySelector("span"));
+			this.$Events.copyCentent(e.path[1].querySelector("span"));
 		},
 		openHandle(index) {
 			if (this.showItemHandle == index) {
@@ -170,6 +170,7 @@ export default {
 		font-size: 16px;
 	}
 	button {
+		position: relative;
 		height: 24px;
 		line-height: 10px;
 		&.copy {
@@ -177,6 +178,14 @@ export default {
 			i {
 				margin-right: 6px;
 			}
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 		}
 	}
 	.el-tag {

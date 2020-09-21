@@ -1,10 +1,18 @@
 <template>
-	<div class="media_popup"></div>
+	<el-dialog title="media" :visible.sync="dialogVisible" width="50%" class="media-popup">
+		<div class="wrap">aaa</div>
+	</el-dialog>
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			dialogVisible: false,
+		};
+	},
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
 </style>

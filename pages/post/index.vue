@@ -34,11 +34,11 @@
 			<nuxt-link to="/post/edit" class="add">
 				<i class="el-icon-circle-plus"></i>添加
 			</nuxt-link>
-			<div class="list">
-				<div class="item" v-for="(item,index) in listData" :key="index">
+			<transition-group name="list" tag="div">
+				<div v-for="item in listData" :key="item" class="item">
 					<div class="col category"></div>
 					<div class="col text">
-						<div class="title">this is test title</div>
+						<div class="title">{{ item }}this is test title</div>
 						<div class="describe">this is test describe</div>
 					</div>
 					<div class="col date">
@@ -67,8 +67,8 @@
 						</el-dropdown>
 					</div>
 				</div>
-			</div>
-			<div class="paged" v-if="listData.length>10">
+			</transition-group>
+			<div class="paged" v-if="listData.length>=10">
 				<el-pagination
 					@current-change="currentChange"
 					background
@@ -78,6 +78,9 @@
 				></el-pagination>
 			</div>
 		</div>
+		<el-dialog title="快捷编辑" :visible.sync="dialogVisible" width="50%" class="edit-popup">
+			<div class="wrap">aaa</div>
+		</el-dialog>
 	</main>
 </template>
 
@@ -90,6 +93,7 @@ export default {
 			listData: [1, 2, 3, 4, 5],
 			publish: false,
 			searchDate: "",
+			dialogVisible: false,
 		};
 	},
 	methods: {
@@ -112,11 +116,11 @@ export default {
 							message: "已取消删除",
 						});
 					});
+			} else if (command == "edit") {
+				// this.dialogVisible = true;
 			}
 		},
-		currentChange(page) {
-			console.log(page);
-		},
+		currentChange(page) {},
 	},
 };
 </script>
@@ -182,9 +186,18 @@ a.add {
 .item {
 	display: flex;
 	align-items: center;
+	width: 100%;
 	color: #808695;
-	padding: 12px 0;
+	padding: 12px 10px;
 	border-bottom: 1px solid #e8eaec;
+	background-color: #fff;
+	transition: background-color 0.3s;
+	&:hover {
+		background-color: #ecf8ff;
+	}
+	&.list-move {
+		transition: transform 1s;
+	}
 	.col {
 		display: flex;
 		align-items: center;
