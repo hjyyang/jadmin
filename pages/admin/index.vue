@@ -40,18 +40,6 @@
 		</div>
 		<div class="card linear-wrap">
 			<div class="info">
-				<div class="col pv" v-show="showGroup.indexOf(0)!=-1">
-					<div class="chunk"></div>本周访问量
-				</div>
-				<div class="col leave" v-show="showGroup.indexOf(1)!=-1">
-					<div class="chunk"></div>本周留言数
-				</div>
-				<div class="col comment" v-show="showGroup.indexOf(2)!=-1">
-					<div class="chunk"></div>本周评论数
-				</div>
-				<div class="col newly" v-show="showGroup.indexOf(3)!=-1">
-					<div class="chunk"></div>本周新增用户
-				</div>
 				<nuxt-link to class="col more">
 					<i class="iconfont icon-right"></i>
 				</nuxt-link>
@@ -114,6 +102,76 @@
 						<i class="iconfont icon-right"></i>
 					</nuxt-link>
 				</div>
+				<table>
+					<thead>
+						<tr>
+							<td>入口页面</td>
+							<td>浏览量(PV)</td>
+							<td>占比</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<nuxt-link to>www.baidu.com</nuxt-link>
+							</td>
+							<td>20</td>
+							<td>
+								<div style="width:90%;">90%</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<nuxt-link to>www.taobao.com</nuxt-link>
+							</td>
+							<td>10</td>
+							<td>
+								<div style="width:50%;">50%</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="j_row top10-page">
+			<div class="card">
+				<div class="header">
+					<h4>Top10 搜索词</h4>
+					<nuxt-link to class="col more">
+						<i class="iconfont icon-right"></i>
+					</nuxt-link>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<td>搜索词</td>
+							<td>浏览量(PV)</td>
+							<td>占比</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<nuxt-link to>webpack</nuxt-link>
+							</td>
+							<td>20</td>
+							<td>
+								<div style="width:90%;">90%</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card">
+				<div class="header">
+					<h4>浏览器占比</h4>
+					<nuxt-link to class="col more">
+						<i class="iconfont icon-right"></i>
+					</nuxt-link>
+				</div>
+				<div class="pie-wrap">
+					<div class="pie"></div>
+				</div>
 			</div>
 		</div>
 	</main>
@@ -122,7 +180,9 @@
 <script>
 import echarts from "echarts/lib/echarts";
 import line from "echarts/lib/chart/line";
+import pie from "echarts/lib/chart/pie";
 import tooltip from "echarts/lib/component/tooltip";
+import legend from "echarts/lib/component/legend";
 export default {
 	layout: "admin",
 	data() {
@@ -160,7 +220,7 @@ export default {
 				},
 				series: [
 					{
-						name: "",
+						name: "访问量",
 						data: [820, 932, 901, 934, 1290, 1330, 1320],
 						type: "line",
 						smooth: true,
@@ -173,7 +233,7 @@ export default {
 						},
 					},
 					{
-						name: "",
+						name: "留言数",
 						data: [],
 						type: "line",
 						smooth: true,
@@ -186,7 +246,7 @@ export default {
 						},
 					},
 					{
-						name: "",
+						name: "评论数",
 						data: [],
 						type: "line",
 						smooth: true,
@@ -199,7 +259,7 @@ export default {
 						},
 					},
 					{
-						name: "",
+						name: "新增用户",
 						data: [],
 						type: "line",
 						smooth: true,
@@ -214,20 +274,57 @@ export default {
 				],
 				tooltip: {
 					trigger: "item",
-					formatter: "{b} : {c} ",
+					formatter: "{a}<br/>{b} : {c} ",
 				},
 			},
-			showGroup: [0],
+			pieOption: {
+				tooltip: {
+					trigger: "item",
+					formatter: "{a} <br/>{b} : {c} ({d}%)",
+				},
+				legend: {
+					orient: "vertical",
+					left: "left",
+					data: ["Chrome", "Safari", "Opera", "Firefox", "IE"],
+				},
+				series: [
+					{
+						name: "访问来源",
+						type: "pie",
+						radius: "80%",
+						center: ["50%", "60%"],
+						data: [
+							{ value: 635, name: "Chrome" },
+							{ value: 310, name: "Safari" },
+							{ value: 234, name: "Opera" },
+							{ value: 135, name: "Firefox" },
+							{ value: 148, name: "IE" },
+						],
+						itemStyle: {
+							emphasis: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: "rgba(0, 0, 0, 0.5)",
+							},
+						},
+					},
+				],
+			},
 		};
 	},
 	mounted() {
 		this.lineTable();
+		this.browser();
 	},
 	methods: {
 		//线性表
 		lineTable() {
 			let line = echarts.init(document.getElementsByClassName("line")[0]);
 			line.setOption(this.lineOption);
+		},
+		browser() {
+			let pie = echarts.init(document.getElementsByClassName("pie")[0]);
+			pie.setOption(this.pieOption);
 		},
 		showLine(el, index) {
 			let target = el.target,
@@ -239,11 +336,9 @@ export default {
 				];
 			if (target.classList.value.indexOf("active") == -1) {
 				target.classList.add("active");
-				this.showGroup.push(index);
 				this.lineOption.series[index].data = data[index];
 			} else {
 				target.classList.remove("active");
-				this.showGroup.splice(this.showGroup.indexOf(index), 1);
 				this.lineOption.series[index].data = [];
 			}
 			this.lineTable();
@@ -401,12 +496,26 @@ table {
 			text-align: right;
 		}
 		&:nth-of-type(3) {
-            display: flex;
 			padding-left: 15px;
 			div {
 				background-color: #dcebfe;
 			}
 		}
+	}
+}
+.pie-wrap {
+	position: relative;
+	&::before {
+		content: "";
+		display: block;
+		padding-top: 31%;
+	}
+	.pie {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
 	}
 }
 </style>

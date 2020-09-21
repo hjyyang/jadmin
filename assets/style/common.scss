@@ -18,11 +18,12 @@ html {
 
 body {
   height: 100%;
-//   overflow: hidden;
+  //   overflow: hidden;
   //   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
   //     STXinwei, "Helvetica Neue", Arial, sans-serif;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    STXinwei, "Microsoft YaHei", Arial, sans-serif;
+    "微软雅黑", "Microsoft YaHei", Arial, sans-serif;
+  overflow-x: hidden;
   &.admin {
     background-color: #f5f7f9;
   }
