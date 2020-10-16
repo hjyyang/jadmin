@@ -44,11 +44,6 @@ async function start() {
     await builder.build();
   }
 
-  //在调用接口与返回结果之前执行路由鉴权判断
-  app.use(async (ctx, next) => {
-    await tokenOp.handle(ctx, next);
-  });
-
   app.use(
     cors({
       origin: function(ctx) {
@@ -56,7 +51,7 @@ async function start() {
         if (ctx.url === "/test") {
           return "*"; // 允许来自所有域名请求
         }
-        return "http://localhost:8081"; //只允许http://localhost:8081这个域名的请求
+        return "*"; //只允许http://localhost:8081这个域名的请求
       },
       maxAge: 5, //指定本次预检请求的有效期，单位为秒。
       credentials: true, //是否允许发送Cookie
@@ -65,6 +60,11 @@ async function start() {
       exposeHeaders: ["WWW-Authenticate", "Server-Authorization"] //设置获取其他自定义字段
     })
   );
+  
+  //在调用接口与返回结果之前执行路由鉴权判断
+  app.use(async (ctx, next) => {
+    await tokenOp.handle(ctx, next);
+  });
 
   //------------使用接口url start-----------------
   app.use(user.routes()).use(user.allowedMethods());
