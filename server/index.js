@@ -17,6 +17,7 @@ const notAuth = require("./api/notAuth");
 const document = require("./api/document");
 const file = require("./api/file");
 const simple = require("./api/simple");
+const post = require("./api/post");
 //------------引入接口 end-------------------
 
 const app = new Koa();
@@ -72,6 +73,7 @@ async function start() {
   app.use(document.routes()).use(document.allowedMethods());
   app.use(file.routes()).use(file.allowedMethods());
   app.use(simple.routes()).use(simple.allowedMethods());
+  app.use(post.routes()).use(post.allowedMethods());
   //------------使用接口url end-----------------
 
   app.use(ctx => {
