@@ -441,8 +441,7 @@ export default {
 				margin-top: 100px;
 			}
 			div {
-				height: 28px;
-				line-height: 28px;
+				line-height: 1.5;
 			}
 		}
 		label {

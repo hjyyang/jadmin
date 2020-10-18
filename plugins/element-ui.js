@@ -30,7 +30,8 @@ import {
   Select,
   Option,
   ButtonGroup,
-  DatePicker
+  DatePicker,
+  Drawer
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/zh-CN";
 import locale from "element-ui/lib/locale";
@@ -67,5 +68,6 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(ButtonGroup);
 Vue.use(DatePicker);
+Vue.use(Drawer);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$confirm = MessageBox.confirm;
