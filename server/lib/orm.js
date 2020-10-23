@@ -190,4 +190,6 @@ let Categorys = sequelize.define(
 );
 dataTables.Categorys = Categorys;
 
+Posts.hasOne(Categorys, { foreignKey: "id" });
+
 module.exports = dataTables;

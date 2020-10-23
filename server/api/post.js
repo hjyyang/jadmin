@@ -8,31 +8,26 @@ const router = new Router({
 	prefix: "/j_api/post",
 });
 
-router.post("/list", async (ctx) => {
-	let { title, time, page, cid } = ctx.request.body,
-		whereObj = {};
-	if (!page || isNaN(parseInt(page)) || (!!time && !Array.isArray(time))) {
+router.get("/list", async (ctx) => {
+	let { title, time, page, cid } = ctx.request.query;
+	if (
+		!page ||
+		isNaN(parseInt(page)) ||
+		(!!time && !Array.isArray(time)) ||
+		(!!title && typeof title !== "string") ||
+		(!!cid && isNaN(parseInt(cid)))
+	) {
 		return (ctx.body = {
 			result: false,
 			message: "请输入正确的字段或值！",
 		});
 	}
-	if (title) {
-		whereObj.title = {
-			[Op.like]: "%" + title + "%",
-		};
-	}
-	if (time) {
-		whereObj.createdAt = {
-			[Op.between]: time,
-		};
-	}
-	let res = await Posts.findAndCountAll({
+	let option = {
 		order: [
 			//倒序排列createdAt数据
 			["createdAt", "DESC"],
 		],
-		where: whereObj,
+		where: {},
 		attributes: [
 			["id", "id"],
 			["title", "title"],
@@ -46,11 +41,89 @@ router.post("/list", async (ctx) => {
 		],
 		offset: 10 * (page - 1),
 		limit: 10,
-	});
+	};
+	if (title) {
+		option.where.title = {
+			[Op.like]: "%" + title + "%",
+		};
+	}
+	if (time) {
+		option.where.createdAt = {
+			[Op.between]: time,
+		};
+	}
+	if (cid) {
+		option.include = [
+			{
+				model: Categorys,
+				where: {
+					id: cid,
+				},
+			},
+		];
+	}
+	let res = await Posts.findAndCountAll(option);
 	return (ctx.body = {
 		code: 8888,
 		message: "successful",
 		postList: res,
+	});
+});
+
+router.get("/find", async (ctx) => {
+	let { pid } = ctx.request.query;
+	if (!pid || isNaN(parseInt(pid))) {
+		return (ctx.body = {
+			result: false,
+			message: "请输入正确的字段或值！",
+		});
+	}
+	let option = {
+		where: {
+			id: pid,
+		},
+		attributes: [
+			["id", "id"],
+			["title", "title"],
+			["describe", "describe"],
+			["createdAt", "createdAt"],
+			["updatedAt", "last_modified_date"],
+			["publish_state", "publish_state"],
+			["cid", "cid"],
+			["content", "content"],
+		],
+	};
+	let res = await Posts.findOne(option);
+	return (ctx.body = {
+		code: 8888,
+		message: "successful",
+		post: res,
+	});
+});
+
+
+router.post("/add", async (ctx) => {
+	let { content, cid, title, describe, publish_state } = ctx.request.body;
+	return (ctx.body = {
+		code: 8888,
+		message: "successful",
+	});
+});
+
+router.post("/update", async (ctx) => {
+    let { pid, content, cid, title, describe, publish_state } = ctx.request.body;
+    
+	return (ctx.body = {
+		code: 8888,
+		message: "successful",
+	});
+});
+
+router.get("/detele", async (ctx) => {
+	let { pid } = ctx.request.query;
+	return (ctx.body = {
+		code: 8888,
+		message: "successful",
 	});
 });
 

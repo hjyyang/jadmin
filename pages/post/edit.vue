@@ -139,7 +139,7 @@ export default {
 	}
 	.cover_img_btn {
 		cursor: pointer;
-        outline: none;
+		outline: none;
 		margin-left: 20px;
 		transition: all 0.2s;
 		&:hover {
