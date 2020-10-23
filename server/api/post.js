@@ -62,12 +62,19 @@ router.get("/list", async (ctx) => {
 			},
 		];
 	}
-	let res = await Posts.findAndCountAll(option);
-	return (ctx.body = {
-		code: 8888,
-		message: "successful",
-		postList: res,
-	});
+	try {
+		let res = await Posts.findAndCountAll(option);
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+			postList: res,
+		});
+	} catch (error) {
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
 
 router.get("/find", async (ctx) => {
@@ -93,26 +100,57 @@ router.get("/find", async (ctx) => {
 			["content", "content"],
 		],
 	};
-	let res = await Posts.findOne(option);
-	return (ctx.body = {
-		code: 8888,
-		message: "successful",
-		post: res,
-	});
+	try {
+		let res = await Posts.findOne(option);
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+			post: res,
+		});
+	} catch (error) {
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
-
 
 router.post("/add", async (ctx) => {
 	let { content, cid, title, describe, publish_state } = ctx.request.body;
-	return (ctx.body = {
-		code: 8888,
-		message: "successful",
-	});
+	if ((!!publish_state && isNaN(parseInt(publish_state))) || (!!cid && isNaN(parseInt(cid)))) {
+		return (ctx.body = {
+			result: false,
+			message: "请输入正确的字段或值！",
+		});
+	}
+	let option = {};
+	if (!!content) option.content = content;
+	if (!!cid) option.cid = cid;
+	if (!!title) option.title = title;
+	if (!!publish_state) option.publish_state = publish_state;
+	if (!!describe) option.describe = describe;
+	console.log(option);
+	try {
+		let res = await Posts.create(option, {
+			raw: true,
+		});
+		console.log(res);
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+		});
+	} catch (error) {
+		console.log(error);
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
 
 router.post("/update", async (ctx) => {
-    let { pid, content, cid, title, describe, publish_state } = ctx.request.body;
-    
+	let { pid, content, cid, title, describe, publish_state } = ctx.request.body;
+
 	return (ctx.body = {
 		code: 8888,
 		message: "successful",
