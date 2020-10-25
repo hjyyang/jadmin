@@ -129,18 +129,15 @@ router.post("/add", async (ctx) => {
 	if (!!title) option.title = title;
 	if (!!publish_state) option.publish_state = publish_state;
 	if (!!describe) option.describe = describe;
-	console.log(option);
 	try {
-		let res = await Posts.create(option, {
-			raw: true,
-		});
-		console.log(res);
+		let res = await Posts.create(option);
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",
+			pid: res.dataValues.id,
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return (ctx.body = {
 			code: 8003,
 			message: "Server error",
@@ -149,20 +146,64 @@ router.post("/add", async (ctx) => {
 });
 
 router.post("/update", async (ctx) => {
-	let { pid, content, cid, title, describe, publish_state } = ctx.request.body;
-
-	return (ctx.body = {
-		code: 8888,
-		message: "successful",
-	});
+	let { pid, content, cid, title, describe, publish_state, cover_image } = ctx.request.body;
+	if (!pid || isNaN(parseInt(pid))) {
+		return (ctx.body = {
+			result: false,
+			message: "请输入正确的字段或值！",
+		});
+	}
+	let option = {
+			title: title,
+			content: content,
+			cid: cid,
+			describe: describe,
+			publish_state: publish_state,
+			cover_image: cover_image,
+		},
+		where = {
+			where: { id: pid },
+		};
+	try {
+		await Posts.update(option, where);
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+		});
+	} catch (error) {
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
 
 router.get("/detele", async (ctx) => {
 	let { pid } = ctx.request.query;
-	return (ctx.body = {
-		code: 8888,
-		message: "successful",
-	});
+	if (!pid && isNaN(parseInt(pid)) && !Array.isArray(pid)) {
+		return (ctx.body = {
+			result: false,
+			message: "请输入正确的字段或值！",
+		});
+	}
+	try {
+		let res = await mySequelize.queryInterface.bulkDelete("posts", {
+			id: {
+				[Op.in]: pid,
+			},
+		});
+		console.log(res);
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+		});
+	} catch (error) {
+        console.log(error)
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
 
 module.exports = router;
