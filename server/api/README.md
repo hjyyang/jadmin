@@ -11,3 +11,4 @@ code：
 8004 未知错误 unknown error
 8005 失败 failure
 8006 权限错误 Bad permissions
+8007 未找到 not found

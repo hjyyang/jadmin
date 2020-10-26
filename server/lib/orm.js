@@ -163,8 +163,8 @@ let Posts = sequelize.define(
 			type: Sequelize.BOOLEAN,
 			allowNull: false,
 			defaultValue: 0,
-        },
-        content: Sequelize.TEXT,
+		},
+		content: Sequelize.TEXT,
 		createdAt: Sequelize.DATE,
 		updatedAt: Sequelize.DATE,
 	},
@@ -184,6 +184,7 @@ let Categorys = sequelize.define(
 			autoIncrement: true,
 		},
 		name: Sequelize.STRING,
+		cover_image: Sequelize.STRING,
 	},
 	{
 		timestamps: false,
