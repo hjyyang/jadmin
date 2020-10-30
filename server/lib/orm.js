@@ -195,4 +195,27 @@ dataTables.Categorys = Categorys;
 
 Posts.hasOne(Categorys, { foreignKey: "id" });
 
+let Statistics = sequelize.define(
+	"statistics",
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		uid: Sequelize.INTEGER,
+		type: Sequelize.INTEGER,
+		name: Sequelize.STRING,
+		createdAt: Sequelize.DATE,
+		browser: Sequelize.STRING,
+		ip: Sequelize.STRING,
+		os: Sequelize.STRING,
+	},
+	{
+		timestamps: false,
+		freezeTableName: true,
+	}
+);
+dataTables.Statistics = Statistics;
+
 module.exports = dataTables;
