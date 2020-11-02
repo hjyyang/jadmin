@@ -210,6 +210,10 @@ let Statistics = sequelize.define(
 		browser: Sequelize.STRING,
 		ip: Sequelize.STRING,
 		os: Sequelize.STRING,
+		province: Sequelize.STRING,
+		city: Sequelize.STRING,
+		lp: Sequelize.STRING,
+		duration: Sequelize.INTEGER,
 	},
 	{
 		timestamps: false,

@@ -1,6 +1,6 @@
 const Router = require("koa-router");
 const { Statistics, mySequelize } = require("../lib/orm");
-const parser = require("ua-parser-js");
+const requestInfo = require("../common/requestInfo");
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -8,32 +8,42 @@ const Op = sequelize.Op;
 const router = new Router({
 	prefix: "/j_api/data",
 });
-
+//pv 页面访问量，每次进入页面后都产生一个pv
+//uv 用户访问量，限定时间内进入的用户量
+//受访页面 被访问的页面 vp
+//入口页面 landingPage 着陆页，即进入网站的第一个页面 lp
 /**
  * 收集用户访问数据
- * @param  {[number]}  type             访问类型（页面，评论，按钮）
+ * @param  {[number]}  type             访问类型（1：页面，2：按钮）
  * @param  {[number]}  uid              用户id
  * @param  {[string]}  name             访问具体名称，如访问首页，评论了哪一篇文章
+ * @param  {[number]}  duration         页面停留时间
+ * @param  {[string]}  referrer         从哪个url访问该页面
  */
 router.get("/visit", async (ctx) => {
-	let { uid, type, name } = ctx.request.query;
+	let { uid, type, name, duration, referrer } = ctx.request.query;
 	if (!type || isNaN(parseInt(type))) {
 		return (ctx.body = {
 			result: false,
 			message: "请输入正确的字段或值！",
 		});
 	}
-	let info = parser(ctx.headers["user-agent"]);
+	let info = await requestInfo.parser(ctx);
+	console.log(info);
 	let option = {
 		uid: uid,
 		type: type,
-		name: name ? name : "",
-		browser: info.browser.name,
-		os: info.os.name,
-		ip: ctx.ip,
+		name: name,
+		browser: info.browser,
+		os: info.os,
+		ip: info.ip,
+		province: info.province,
+		city: info.city,
+		duration: duration ? duration : 0,
+		lp: referrer,
 	};
 	try {
-		await Statistics.create(option);
+		// await Statistics.create(option);
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",
@@ -66,6 +76,7 @@ router.post("/list", async (ctx) => {
 		attributes: ["uid", "os", "name", "type", "browser", "ip", "createdAt"],
 		raw: true,
 	};
+	console.log(requestInfo.parser(ctx));
 	try {
 		let res = await Statistics.findAll(option);
 		statFun(res);
@@ -93,7 +104,7 @@ function statFun(data) {
 		allMonth = [],
 		thirtyOne = [1, 3, 5, 7, 8, 10, 12],
 		thirty = [4, 6, 9, 11],
-		uv = [], //访客数
+		uv = [], //访客ip
 		pv = 0;
 	let dayMap = currentDay,
 		month = currentMonth;
