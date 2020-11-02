@@ -24,8 +24,8 @@ router.get("/visit", async (ctx) => {
 	let { uid, type, name, duration, referrer } = ctx.request.query;
 	if (!type || isNaN(parseInt(type))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let info = await requestInfo.parser(ctx);

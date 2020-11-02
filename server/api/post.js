@@ -25,8 +25,8 @@ router.get("/list", async (ctx) => {
 		(!!cid && isNaN(parseInt(cid)))
 	) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {
@@ -92,8 +92,8 @@ router.get("/find", async (ctx) => {
 	let { pid } = ctx.request.query;
 	if (!pid || isNaN(parseInt(pid))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {
@@ -139,8 +139,8 @@ router.post("/add", async (ctx) => {
 	let { content, cid, title, describe, publish_state, cover_image } = ctx.request.body;
 	if ((!!publish_state && isNaN(parseInt(publish_state))) || (!!cid && isNaN(parseInt(cid)))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {};
@@ -180,8 +180,8 @@ router.post("/update", async (ctx) => {
 	let { pid, content, cid, title, describe, publish_state, cover_image } = ctx.request.body;
 	if (!pid || isNaN(parseInt(pid))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {
@@ -217,8 +217,8 @@ router.post("/detele", async (ctx) => {
 	let { pid } = ctx.request.body;
 	if (!pid || (pid && isNaN(parseInt(pid))) || (pid && Array.isArray(pid))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let deteleArr = [];
@@ -260,8 +260,8 @@ router.get("/category/add", async (ctx) => {
 	let { name } = ctx.request.query;
 	if (!name) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {
@@ -304,8 +304,8 @@ router.get("/category/update", async (ctx) => {
 	let { cid, name } = ctx.request.query;
 	if (!cid || (cid && isNaN(parseInt(cid))) || !name) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {
@@ -336,8 +336,8 @@ router.post("/category/detele", async (ctx) => {
 	let { cid } = ctx.request.body;
 	if (!cid || (cid && isNaN(parseInt(cid)))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let deteleArr = [];
@@ -379,8 +379,8 @@ router.get("/category/list", async (ctx) => {
 	let { page } = ctx.request.query;
 	if (!page || isNaN(parseInt(page))) {
 		return (ctx.body = {
-			result: false,
-			message: "请输入正确的字段或值！",
+			code: 8002,
+			message: "Please enter the correct field or value!",
 		});
 	}
 	let option = {

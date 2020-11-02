@@ -222,4 +222,29 @@ let Statistics = sequelize.define(
 );
 dataTables.Statistics = Statistics;
 
+let Comments = sequelize.define(
+	"comments",
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		uid: Sequelize.INTEGER,
+		pid: Sequelize.INTEGER,
+		cid: Sequelize.INTEGER,
+		createdAt: Sequelize.DATE,
+		browser: Sequelize.STRING,
+		ip: Sequelize.STRING,
+		os: Sequelize.STRING,
+		province: Sequelize.STRING,
+		city: Sequelize.STRING,
+		content: Sequelize.STRING,
+	},
+	{
+		timestamps: false,
+		freezeTableName: true,
+	}
+);
+dataTables.Comments = Comments;
 module.exports = dataTables;

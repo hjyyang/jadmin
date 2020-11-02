@@ -19,6 +19,7 @@ const file = require("./api/file");
 const simple = require("./api/simple");
 const post = require("./api/post");
 const data = require("./api/data");
+const comment = require("./api/comment");
 //------------引入接口 end-------------------
 
 const app = new Koa();
@@ -73,6 +74,7 @@ async function start() {
 	app.use(simple.routes()).use(simple.allowedMethods());
 	app.use(post.routes()).use(post.allowedMethods());
 	app.use(data.routes()).use(data.allowedMethods());
+	app.use(comment.routes()).use(comment.allowedMethods());
 	//------------使用接口url end-----------------
 
 	app.use((ctx) => {
