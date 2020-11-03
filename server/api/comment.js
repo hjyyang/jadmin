@@ -91,4 +91,85 @@ router.get("/detele", async (ctx) => {
 		});
 	}
 });
+
+/**
+ * 查询评论列表
+ * @param  {[number]} pid          文章id
+ */
+router.get("/list", async (ctx) => {
+	let { pid } = ctx.request.query;
+	if (!pid || isNaN(parseInt(pid))) {
+		return (ctx.body = {
+			code: 8002,
+			message: "Please enter the correct field or value!",
+		});
+	}
+	let option = {
+		where: {
+			pid: pid,
+		},
+		attributes: [
+			["id", "id"],
+			["content", "content"],
+			["createdAt", "createdAt"],
+			["pid", "pid"],
+			["cid", "cid"],
+			["uid", "uid"],
+			["browser", "browser"],
+			["os", "os"],
+			["province", "province"],
+			["city", "city"],
+		],
+		raw: true,
+	};
+	try {
+		let res = await Comments.findAll(option),
+			list = {};
+		if (res.length < 1) {
+			return (ctx.body = {
+				code: 8007,
+				message: "not found",
+			});
+		}
+		for (let i in res) {
+			if (!res[i].cid) {
+				//不存在评论id，直接评论文章
+				list[res[i].id] = {
+					main: res[i],
+					child: [],
+				};
+			} else {
+				//存在评论id，回复评论
+				if (list[res[i].cid]) {
+					//列表外层存在，一级回复
+					list[res[i].cid].child.push(res[i]);
+				} else {
+					//二级回复，遍历列表查找对应的父级评论
+					for (let key in list) {
+						if (list.hasOwnProperty(key)) {
+							let item = list[key];
+							for (let j in item.child) {
+								if (item.child[j].id == res[i].cid) {
+									item.child.push(res[i]);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+			commentList: list,
+		});
+	} catch (error) {
+		console.log(error);
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
+});
 module.exports = router;
