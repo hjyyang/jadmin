@@ -1,24 +1,23 @@
 const Router = require("koa-router");
-const { Comments, mySequelize } = require("../lib/orm");
+const { LeaveMessage, mySequelize } = require("../lib/orm");
 const requestInfo = require("../common/requestInfo");
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
 const router = new Router({
-	prefix: "/j_api/comment",
+	prefix: "/j_api/leave",
 });
 
 /**
- * 添加评论
- * @param  {[string]} content     评论内容
+ * 添加留言
+ * @param  {[string]} content     留言内容
  * @param  {[number]} uid         用户id
- * @param  {[number]} pid         评论文章id
- * @param  {[number]} cid         评论其评论的id，如无则是直接评论文章，有则是回复评论
+ * @param  {[number]} pid         留言id，如有则是回复留言
  */
 router.post("/add", async (ctx) => {
-	let { content, uid, pid, cid } = ctx.request.body;
-	if (!uid || isNaN(parseInt(uid)) || !pid || isNaN(parseInt(pid)) || (cid && isNaN(parseInt(cid))) || !content) {
+	let { content, uid, pid } = ctx.request.body;
+	if (!uid || isNaN(parseInt(uid)) || (pid && isNaN(parseInt(pid))) || !content) {
 		return (ctx.body = {
 			code: 8002,
 			message: "Please enter the correct field or value!",
@@ -28,7 +27,6 @@ router.post("/add", async (ctx) => {
 			content: content,
 			uid: uid,
 			pid: pid,
-			cid: cid,
 		},
 		info = {};
 	info = await requestInfo.parser(ctx);
@@ -38,7 +36,7 @@ router.post("/add", async (ctx) => {
 	option.province = info.province;
 	option.city = info.city;
 	try {
-		let res = await Comments.create(option);
+		let res = await LeaveMessage.create(option);
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",
@@ -53,8 +51,8 @@ router.post("/add", async (ctx) => {
 });
 
 /**
- * 删除评论
- * @param  {[number]} id          评论id
+ * 删除留言
+ * @param  {[number]} id          留言id
  * @param  {[number]} uid         用户id
  */
 router.get("/detele", async (ctx) => {
@@ -72,7 +70,7 @@ router.get("/detele", async (ctx) => {
 		},
 	};
 	try {
-		let res = await Comments.destroy(option);
+		let res = await LeaveMessage.destroy(option);
 		if (res) {
 			return (ctx.body = {
 				code: 8888,

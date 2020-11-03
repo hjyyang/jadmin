@@ -247,4 +247,29 @@ let Comments = sequelize.define(
 	}
 );
 dataTables.Comments = Comments;
+
+let LeaveMessage = sequelize.define(
+	"leaveMessage",
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		uid: Sequelize.INTEGER,
+		pid: Sequelize.INTEGER,
+		createdAt: Sequelize.DATE,
+		browser: Sequelize.STRING,
+		ip: Sequelize.STRING,
+		os: Sequelize.STRING,
+		province: Sequelize.STRING,
+		city: Sequelize.STRING,
+		content: Sequelize.STRING,
+	},
+	{
+		timestamps: false,
+		freezeTableName: true,
+	}
+);
+dataTables.LeaveMessage = LeaveMessage;
 module.exports = dataTables;
