@@ -249,7 +249,7 @@ let Comments = sequelize.define(
 dataTables.Comments = Comments;
 
 let LeaveMessage = sequelize.define(
-	"leaveMessage",
+	"leave_message",
 	{
 		id: {
 			type: Sequelize.INTEGER,
@@ -257,7 +257,7 @@ let LeaveMessage = sequelize.define(
 			autoIncrement: true,
 		},
 		uid: Sequelize.INTEGER,
-		pid: Sequelize.INTEGER,
+		leaveId: Sequelize.INTEGER,
 		createdAt: Sequelize.DATE,
 		browser: Sequelize.STRING,
 		ip: Sequelize.STRING,
@@ -272,4 +272,46 @@ let LeaveMessage = sequelize.define(
 	}
 );
 dataTables.LeaveMessage = LeaveMessage;
+
+let Notifications = sequelize.define(
+	"notifications",
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		message: Sequelize.STRING,
+		type: Sequelize.INTEGER,
+		object_id: Sequelize.INTEGER,
+	},
+	{
+		timestamps: false,
+		freezeTableName: true,
+	}
+);
+dataTables.Notifications = Notifications;
+
+let NotificationTermUser = sequelize.define(
+	"notification_term_user",
+	{
+		note_id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+		},
+		uid: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+		},
+		status: Sequelize.BOOLEAN,
+	},
+	{
+		timestamps: false,
+		freezeTableName: true,
+	}
+);
+dataTables.NotificationTermUser = NotificationTermUser;
+Notifications.hasOne(NotificationTermUser, { as: "read", foreignKey: "note_id" });
+NotificationTermUser.hasOne(Notifications, { as: "read", foreignKey: "note_id" });
+
 module.exports = dataTables;

@@ -21,6 +21,7 @@ const post = require("./api/post");
 const data = require("./api/data");
 const comment = require("./api/comment");
 const leave = require("./api/leave");
+const notification = require("./api/notification");
 //------------引入接口 end-------------------
 
 const app = new Koa();
@@ -77,6 +78,7 @@ async function start() {
 	app.use(data.routes()).use(data.allowedMethods());
 	app.use(comment.routes()).use(comment.allowedMethods());
 	app.use(leave.routes()).use(leave.allowedMethods());
+	app.use(notification.routes()).use(notification.allowedMethods());
 	//------------使用接口url end-----------------
 
 	app.use((ctx) => {
