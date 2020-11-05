@@ -68,7 +68,7 @@ const request = {
 	//更新post
 	updatePost: new Api("/j_api/post/update", "post"),
 	//删除一条或多条post
-	detelePost: new Api("/j_api/post/detele", "post"),
+	detelePost: new Api("/j_api/post/detele"),
 
 	/**********************************分类接口************************************/
 	//添加category

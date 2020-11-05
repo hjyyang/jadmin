@@ -2,38 +2,44 @@
 	<main id="post_page" class="page">
 		<div class="wrap total">
 			<ul>
-				<li>
+				<li @click="handlePublish(1)" :class="{ active: currentPublish == 1 }">
 					<div class="title">全部</div>
 					<div class="number">{{ count.total }}</div>
 				</li>
-				<li>
+				<li @click="handlePublish(2)" :class="{ active: currentPublish == 2 }">
 					<div class="title">发布</div>
 					<div class="number">{{ count.published }}</div>
 				</li>
-				<li>
+				<li @click="handlePublish(3)" :class="{ active: currentPublish == 3 }">
 					<div class="title">草稿</div>
 					<div class="number">{{ count.unpublished }}</div>
 				</li>
 			</ul>
 		</div>
+		<div class="wrap tool">
+			<el-date-picker
+				v-model="searchDate"
+				size="small"
+				type="daterange"
+				range-separator="至"
+				start-placeholder="开始日期"
+				end-placeholder="结束日期"
+			></el-date-picker>
+			<div class="search">
+				<el-input placeholder="标题" size="small" suffix-icon="el-icon-search" clearable v-model="search"></el-input>
+			</div>
+			<el-select v-model="currentCategory" size="small" clearable placeholder="分类">
+				<el-option v-for="item in categoryList" :key="item.cid" :label="item.name" :value="item.cid"> </el-option>
+			</el-select>
+			<el-button @click="handleSearch" type="primary" icon="el-icon-search" size="small" circle></el-button>
+		</div>
 		<div class="wrap">
 			<div class="header">
 				<h4>文章列表</h4>
-				<el-date-picker
-					v-model="searchDate"
-					size="small"
-					type="daterange"
-					range-separator="至"
-					start-placeholder="开始日期"
-					end-placeholder="结束日期"
-				></el-date-picker>
-				<div class="search">
-					<el-input placeholder="标题查找..." size="small" suffix-icon="el-icon-search" v-model="search"></el-input>
-				</div>
 			</div>
 			<nuxt-link to="/post/edit" class="add"> <i class="el-icon-circle-plus"></i>添加 </nuxt-link>
 			<transition-group name="list" tag="div" v-if="listData.length > 0">
-				<div v-for="(item, index) in listData" :key="item.pid" class="item">
+				<div v-for="(item, index) in listData" :key="item.pid" class="item list-item">
 					<div class="col category">
 						<img :src="categoryObj[item.cid].coverImage ? categoryObj[item.cid].coverImage : require('~/static/image/unknown.jpg')" />
 					</div>
@@ -42,8 +48,8 @@
 						<div class="describe">{{ item.describe }}</div>
 					</div>
 					<div class="col date">
-						<div class="title">更新时间</div>
-						<div class="describe">{{ dateFormat(new Date(item.updateTime)) }}</div>
+						<div class="title">创建时间</div>
+						<div class="describe">{{ dateFormat(new Date(item.createdTime)) }}</div>
 					</div>
 					<div class="col publish">
 						<div class="title">发布</div>
@@ -68,13 +74,13 @@
 					</div>
 				</div>
 			</transition-group>
-			<div class="paged" v-if="count.total >= 2">
+			<div class="paged" v-if="count.total >= 10">
 				<el-pagination
 					@current-change="currentChange"
 					background
 					layout="prev, pager, next"
 					:total="count.total"
-					:page-size="2"
+					:page-size="10"
 				></el-pagination>
 			</div>
 		</div>
@@ -109,7 +115,8 @@ export default {
 			search: "",
 			listData: [],
 			categoryList: [],
-			searchDate: "",
+			currentCategory: null,
+			searchDate: [],
 			dialogVisible: false,
 			currentEditIndex: 0,
 			currentEdit: {},
@@ -120,6 +127,8 @@ export default {
 				unpublished: 0,
 			},
 			categoryObj: {},
+			currentPublish: 1,
+			isPublish: 0,
 		};
 	},
 	methods: {
@@ -130,13 +139,19 @@ export default {
 					cancelButtonText: "取消",
 					type: "warning",
 				})
-					.then(() => {
-						this.$message({
-							type: "success",
-							message: "删除成功!",
+					.then(async () => {
+						let res = await this.$request.detelePost({
+							pid: this.listData[this.currentEditIndex].pid,
 						});
+						if (res.data.code === 8888) {
+							this.$message({
+								type: "success",
+								message: "删除成功!",
+							});
+						}
 					})
-					.catch(() => {
+					.catch((error) => {
+						console.log(error);
 						this.$message({
 							type: "info",
 							message: "已取消删除",
@@ -151,12 +166,17 @@ export default {
 			await this.getData(page);
 		},
 		async getData(page, lock) {
-			let res = await this.$request.getPostList({
-					page: page,
+			let option = {
+					page: page ? page : this.currentPage,
 					count: lock,
-					limit: 2,
-				}),
+				},
+				res = null,
 				data = {};
+			if (this.searchDate && this.searchDate.length > 0) option.time = this.searchDate;
+			if (this.search) option.title = this.search;
+			if (this.search) option.title = this.search;
+			if (this.isPublish) option.isPublish = this.isPublish;
+			res = await this.$request.getPostList(option);
 			this.listData = res.data.postList;
 			if (lock) {
 				this.count.total = res.data.published + res.data.unpublished;
@@ -192,6 +212,20 @@ export default {
 			}
 			return fmt;
 		},
+		async handleSearch() {
+			await this.getData();
+		},
+		async handlePublish(lock) {
+			this.currentPublish = lock;
+			if (lock === 1) {
+				this.isPublish = 0;
+			} else if (lock === 2) {
+				this.isPublish = 1;
+			} else if (lock === 3) {
+				this.isPublish = 2;
+			}
+			await this.getData();
+		},
 	},
 	async created() {
 		await this.getCategory();
@@ -218,10 +252,27 @@ export default {
 				&:hover {
 					color: #57a3f3;
 				}
+				&.active {
+					color: #57a3f3;
+				}
 			}
 			.number {
 				padding-top: 2px;
 				font-size: 26px;
+			}
+		}
+		&.tool {
+			display: flex;
+			align-items: center;
+			.el-date-editor {
+				margin-right: 14px;
+			}
+			.search {
+				max-width: 200px;
+				margin-right: 14px;
+			}
+			button {
+				margin-left: auto;
 			}
 		}
 	}
@@ -231,13 +282,6 @@ export default {
 		padding-bottom: 6px;
 		border-bottom: 1px solid #e8eaec;
 		margin-bottom: 10px;
-		.el-date-editor {
-			margin-left: auto;
-		}
-		.search {
-			max-width: 200px;
-			margin-left: 14px;
-		}
 	}
 	a.add {
 		display: block;

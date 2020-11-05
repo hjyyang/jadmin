@@ -11,15 +11,16 @@ const router = new Router({
 
 /**
  * 获取post列表
- * @param  {[string]} title   筛选条件，post标题
- * @param  {[Array]}  time    筛选条件，post创建时间范围
- * @param  {[number]} page    筛选条件，列表当前分页，一页10条(必须)
- * @param  {[number]} cid     筛选条件，分类id
- * @param  {[number]} count   筛选条件，添加统计字段
- * @param  {[number]} limit   一页多少条数据
+ * @param  {[string]} title     筛选条件，post标题
+ * @param  {[Array]}  time      筛选条件，post创建时间范围
+ * @param  {[number]} page      筛选条件，列表当前分页，一页10条(必须)
+ * @param  {[number]} cid       筛选条件，分类id
+ * @param  {[number]} count     筛选条件，添加统计字段
+ * @param  {[number]} limit     一页多少条数据
+ * @param  {[number]} isPublish 筛选条件,筛选发布状态,1为发布，2而未发布（草稿）
  */
 router.post("/list", async (ctx) => {
-	let { title, time, page, cid, count, limit } = ctx.request.body;
+	let { title, time, page, cid, count, limit, isPublish } = ctx.request.body;
 	if (
 		!page ||
 		isNaN(parseInt(page)) ||
@@ -27,7 +28,8 @@ router.post("/list", async (ctx) => {
 		(!!title && typeof title !== "string") ||
 		(!!cid && isNaN(parseInt(cid))) ||
 		(count && !validator.isBoolean(count + "")) ||
-		(limit && isNaN(parseInt(limit)))
+		(limit && isNaN(parseInt(limit))) ||
+		(!!isPublish && isNaN(parseInt(isPublish)))
 	) {
 		return (ctx.body = {
 			code: 8002,
@@ -72,6 +74,14 @@ router.post("/list", async (ctx) => {
 				},
 			},
 		];
+	}
+	if (isPublish) {
+		if (isPublish == 1) {
+			//发布
+			option.where.publish_state = true;
+		} else {
+			option.where.publish_state = false;
+		}
 	}
 	try {
 		let res = await Posts.findAll(option);
@@ -242,8 +252,8 @@ router.post("/update", async (ctx) => {
  * 删除一条或多条post
  * @param  {[number||Array[number]]} pid             post的id(必须)
  */
-router.post("/detele", async (ctx) => {
-	let { pid } = ctx.request.body;
+router.get("/detele", async (ctx) => {
+	let { pid } = ctx.request.query;
 	if (!pid || (pid && isNaN(parseInt(pid))) || (pid && Array.isArray(pid))) {
 		return (ctx.body = {
 			code: 8002,

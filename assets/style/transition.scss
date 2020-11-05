@@ -1,105 +1,118 @@
 //滑动过渡(后台页面切换)
 .slide-enter-active {
-  animation: slide-in 0.8s;
+	animation: slide-in 0.8s;
 }
 .slide-leave-active {
-  animation: slide-out 0.5s;
+	animation: slide-out 0.5s;
 }
 @keyframes slide-in {
-  0% {
-    transform: translateX(-3%);
-    opacity: 0;
-  }
-  60% {
-    transform: translateX(-3%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0%);
-    opacity: 1;
-  }
+	0% {
+		transform: translateX(-3%);
+		opacity: 0;
+	}
+	60% {
+		transform: translateX(-3%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
 }
 @keyframes slide-out {
-  0% {
-    transform: translateX(0%);
-    opacity: 1;
-  }
-  60% {
-    transform: translateX(0%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(3%);
-    opacity: 0;
-  }
+	0% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+	60% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(3%);
+		opacity: 0;
+	}
 }
 
 //列表动画
-.list-move {
-  transition: transform 1s;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
+// .list-move {
+// 	transition: transform 1s;
+// }
+// .list-enter-active,
+// .list-leave-active {
+// 	transition: all 1s;
+// }
+// .list-enter,
+// .list-leave-to {
+// 	opacity: 0;
+// 	transform: translateY(30px);
+// }
+
+.list-item {
+	transition: all 1s;
+	display: inline-block;
 }
 .list-enter,
 .list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
+	opacity: 0;
+	transform: translateY(30px);
+}
+.list-leave-active {
+	position: absolute;
 }
 
 //淡化(用户列表)
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s;
+	transition: opacity 0.5s;
 }
 .fade-enter,
 .fade-leave-to {
-  opacity: 0;
+	opacity: 0;
 }
 
 //tab翻页效果
 .tab-slide-left-enter-active {
-  animation: tab-slide-left-in 0.4s;
+	animation: tab-slide-left-in 0.4s;
 }
 .tab-slide-left-leave-active {
-  animation: tab-slide-left-out 0.4s;
+	animation: tab-slide-left-out 0.4s;
 }
 .tab-slide-right-enter-active {
-  animation: tab-slide-right-in 0.4s;
+	animation: tab-slide-right-in 0.4s;
 }
 .tab-slide-right-leave-active {
-  animation: tab-slide-right-out 0.4s;
+	animation: tab-slide-right-out 0.4s;
 }
 @keyframes tab-slide-left-in {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(0%);
+	}
 }
 @keyframes tab-slide-left-out {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(0%);
+	}
 }
 @keyframes tab-slide-right-in {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-100%);
+	}
 }
 @keyframes tab-slide-right-out {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-100%);
+	}
 }
