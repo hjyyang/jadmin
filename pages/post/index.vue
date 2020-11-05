@@ -4,15 +4,15 @@
 			<ul>
 				<li>
 					<div class="title">全部</div>
-					<div class="number">10</div>
+					<div class="number">{{ count.total }}</div>
 				</li>
 				<li>
 					<div class="title">发布</div>
-					<div class="number">23</div>
+					<div class="number">{{ count.published }}</div>
 				</li>
 				<li>
 					<div class="title">草稿</div>
-					<div class="number">1</div>
+					<div class="number">{{ count.unpublished }}</div>
 				</li>
 			</ul>
 		</div>
@@ -28,25 +28,27 @@
 					end-placeholder="结束日期"
 				></el-date-picker>
 				<div class="search">
-					<el-input placeholder="请输入..." size="small" suffix-icon="el-icon-search" v-model="search"></el-input>
+					<el-input placeholder="标题查找..." size="small" suffix-icon="el-icon-search" v-model="search"></el-input>
 				</div>
 			</div>
 			<nuxt-link to="/post/edit" class="add"> <i class="el-icon-circle-plus"></i>添加 </nuxt-link>
-			<transition-group name="list" tag="div">
+			<transition-group name="list" tag="div" v-if="listData.length > 0">
 				<div v-for="(item, index) in listData" :key="item.pid" class="item">
-					<div class="col category"></div>
+					<div class="col category">
+						<img :src="categoryObj[item.cid].coverImage ? categoryObj[item.cid].coverImage : require('~/static/image/unknown.jpg')" />
+					</div>
 					<div class="col text">
 						<div class="title">{{ item.title }}</div>
 						<div class="describe">{{ item.describe }}</div>
 					</div>
 					<div class="col date">
 						<div class="title">更新时间</div>
-						<div class="describe">{{ item.updateTime }}</div>
+						<div class="describe">{{ dateFormat(new Date(item.updateTime)) }}</div>
 					</div>
 					<div class="col publish">
 						<div class="title">发布</div>
 						<div class="describe">
-							<el-switch v-model="item.publish"></el-switch>
+							<el-switch v-model="item.publish_state"></el-switch>
 						</div>
 					</div>
 					<div class="col edit">
@@ -66,12 +68,12 @@
 					</div>
 				</div>
 			</transition-group>
-			<div class="paged" v-if="listData.length >= 10">
+			<div class="paged" v-if="count.total >= 2">
 				<el-pagination
 					@current-change="currentChange"
 					background
 					layout="prev, pager, next"
-					:total="listData.length"
+					:total="count.total"
 					:page-size="2"
 				></el-pagination>
 			</div>
@@ -79,8 +81,8 @@
 		<el-dialog title="快捷编辑" :visible.sync="dialogVisible" width="30%" class="edit-popup">
 			<div class="category_wrap">
 				<h4>分类</h4>
-				<el-radio-group v-model="listData.category" size="small">
-					<el-radio :label="item.name" v-for="item in categoryList" :key="item.cid">{{ item.name }}</el-radio>
+				<el-radio-group v-model="currentEdit.cid" size="small">
+					<el-radio :label="item.cid" v-for="item in categoryList" :key="item.cid">{{ item.name }}</el-radio>
 				</el-radio-group>
 			</div>
 			<div class="describe_wrap">
@@ -105,40 +107,19 @@ export default {
 	data() {
 		return {
 			search: "",
-			listData: [
-				{
-					pid: 1,
-					title: "this is munber one title",
-					category: "css",
-					describe: "hahahah",
-					comment: false,
-					updateTime: "2016-07-28 14:00:00",
-					publish: false,
-				},
-				{
-					pid: 2,
-					title: "this is munber two title",
-					category: "javascript",
-					describe: "xixixixixi",
-					comment: true,
-					updateTime: "2017-07-28 14:00:00",
-					publish: true,
-				},
-			],
-			categoryList: [
-				{
-					cid: 1,
-					name: "css",
-				},
-				{
-					cid: 2,
-					name: "javascript",
-				},
-			],
+			listData: [],
+			categoryList: [],
 			searchDate: "",
 			dialogVisible: false,
 			currentEditIndex: 0,
 			currentEdit: {},
+			currentPage: 1,
+			count: {
+				total: 0,
+				published: 0,
+				unpublished: 0,
+			},
+			categoryObj: {},
 		};
 	},
 	methods: {
@@ -166,7 +147,55 @@ export default {
 				this.dialogVisible = true;
 			}
 		},
-		currentChange(page) {},
+		async currentChange(page) {
+			await this.getData(page);
+		},
+		async getData(page, lock) {
+			let res = await this.$request.getPostList({
+					page: page,
+					count: lock,
+					limit: 2,
+				}),
+				data = {};
+			this.listData = res.data.postList;
+			if (lock) {
+				this.count.total = res.data.published + res.data.unpublished;
+				this.count.published = res.data.published;
+				this.count.unpublished = res.data.unpublished;
+			}
+		},
+		async getCategory() {
+			let res = await this.$request.getCategoryList();
+			if (res.data.code === 8888) {
+				this.categoryList = res.data.categoryList;
+				for (let i in this.categoryList) {
+					this.categoryObj[this.categoryList[i].cid] = this.categoryList[i];
+				}
+			}
+		},
+		dateFormat(date, fmt = "YYYY-mm-dd HH:MM") {
+			let ret;
+			const opt = {
+				"Y+": date.getFullYear().toString(), // 年
+				"m+": (date.getMonth() + 1).toString(), // 月
+				"d+": date.getDate().toString(), // 日
+				"H+": date.getHours().toString(), // 时
+				"M+": date.getMinutes().toString(), // 分
+				"S+": date.getSeconds().toString(), // 秒
+				// 有其他格式化字符需求可以继续添加，必须转化成字符串
+			};
+			for (let k in opt) {
+				ret = new RegExp("(" + k + ")").exec(fmt);
+				if (ret) {
+					fmt = fmt.replace(ret[1], ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, "0"));
+				}
+			}
+			return fmt;
+		},
+	},
+	async created() {
+		await this.getCategory();
+		this.getData(this.currentPage, true);
 	},
 };
 </script>
@@ -288,6 +317,7 @@ export default {
 				margin-left: 0;
 				background-color: #e8eaec;
 				border-radius: 6px;
+				overflow: hidden;
 			}
 		}
 		.title {

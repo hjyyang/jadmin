@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const { Posts, Categorys, mySequelize } = require("../lib/orm");
+const validator = require("validator");
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -14,15 +15,19 @@ const router = new Router({
  * @param  {[Array]}  time    筛选条件，post创建时间范围
  * @param  {[number]} page    筛选条件，列表当前分页，一页10条(必须)
  * @param  {[number]} cid     筛选条件，分类id
+ * @param  {[number]} count   筛选条件，添加统计字段
+ * @param  {[number]} limit   一页多少条数据
  */
-router.get("/list", async (ctx) => {
-	let { title, time, page, cid } = ctx.request.query;
+router.post("/list", async (ctx) => {
+	let { title, time, page, cid, count, limit } = ctx.request.body;
 	if (
 		!page ||
 		isNaN(parseInt(page)) ||
 		(!!time && !Array.isArray(time)) ||
 		(!!title && typeof title !== "string") ||
-		(!!cid && isNaN(parseInt(cid)))
+		(!!cid && isNaN(parseInt(cid))) ||
+		(count && !validator.isBoolean(count + "")) ||
+		(limit && isNaN(parseInt(limit)))
 	) {
 		return (ctx.body = {
 			code: 8002,
@@ -36,18 +41,17 @@ router.get("/list", async (ctx) => {
 		],
 		where: {},
 		attributes: [
-			["id", "id"],
+			["id", "pid"],
 			["title", "title"],
 			["describe", "describe"],
-			["createdAt", "createdAt"],
-			["updatedAt", "last_modified_date"],
+			["createdAt", "createdTime"],
+			["updatedAt", "updateTime"],
 			["publish_state", "publish_state"],
 			["cid", "cid"],
-			["like", "like"],
-			["pv", "pv"],
+			["comment", "comment"],
 		],
-		offset: 10 * (page - 1),
-		limit: 10,
+		offset: limit ? limit * (page - 1) : 10 * (page - 1),
+		limit: limit ? limit : 10,
 	};
 	if (title) {
 		option.where.title = {
@@ -70,13 +74,38 @@ router.get("/list", async (ctx) => {
 		];
 	}
 	try {
-		let res = await Posts.findAndCountAll(option);
+		let res = await Posts.findAll(option);
+		if (!!count) {
+			let publish = null,
+				published = 0,
+				unpublished = 0;
+			publish = await Posts.findAll({
+				attributes: ["publish_state", [sequelize.fn("COUNT", sequelize.col("publish_state")), "count"]],
+				group: "publish_state",
+				raw: true,
+			});
+			publish.forEach((item) => {
+				if (item.publish_state) {
+					published = item.count;
+				} else {
+					unpublished = item.count;
+				}
+			});
+			return (ctx.body = {
+				code: 8888,
+				message: "successful",
+				postList: res,
+				published,
+				unpublished,
+			});
+		}
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",
 			postList: res,
 		});
 	} catch (error) {
+		console.log(error);
 		return (ctx.body = {
 			code: 8003,
 			message: "Server error",
@@ -373,27 +402,18 @@ router.post("/category/detele", async (ctx) => {
 
 /**
  * 获取category列表
- * @param  {[number]}  page              列表当前分页，一页10条(必须)
  */
 router.get("/category/list", async (ctx) => {
-	let { page } = ctx.request.query;
-	if (!page || isNaN(parseInt(page))) {
-		return (ctx.body = {
-			code: 8002,
-			message: "Please enter the correct field or value!",
-		});
-	}
 	let option = {
 		attributes: [
 			["id", "cid"],
 			["name", "name"],
-			["cover_image", "cover_image"],
+			["cover_image", "coverImage"],
 		],
-		offset: 10 * (page - 1),
-		limit: 10,
+		raw: true,
 	};
 	try {
-		let res = await Categorys.findAndCountAll(option);
+		let res = await Categorys.findAll(option);
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",

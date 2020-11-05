@@ -60,7 +60,7 @@ const request = {
 
 	/**********************************文章接口************************************/
 	//获取post列表
-	getPostList: new Api("/j_api/post/list"),
+	getPostList: new Api("/j_api/post/list", "post"),
 	//获取单一post详情
 	getPost: new Api("/j_api/post/find"),
 	//添加post
