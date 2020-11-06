@@ -38,42 +38,53 @@
 				<h4>文章列表</h4>
 			</div>
 			<nuxt-link to="/post/edit" class="add"> <i class="el-icon-circle-plus"></i>添加 </nuxt-link>
-			<transition-group name="list" tag="div" v-if="listData.length > 0">
-				<div v-for="(item, index) in listData" :key="item.pid" class="item list-item">
-					<div class="col category">
-						<img :src="categoryObj[item.cid].coverImage ? categoryObj[item.cid].coverImage : require('~/static/image/unknown.jpg')" />
-					</div>
-					<div class="col text">
-						<div class="title">{{ item.title }}</div>
-						<div class="describe">{{ item.describe }}</div>
-					</div>
-					<div class="col date">
-						<div class="title">创建时间</div>
-						<div class="describe">{{ dateFormat(new Date(item.createdTime)) }}</div>
-					</div>
-					<div class="col publish">
-						<div class="title">发布</div>
-						<div class="describe">
-							<el-switch v-model="item.publish_state"></el-switch>
+			<div class="list" ref="datalist">
+				<transition-group name="list" tag="div" v-if="listData.length > 0">
+					<div v-for="(item, index) in listData" :key="item.pid" class="item list-item">
+						<div class="col category">
+							<img
+								:src="
+									categoryObj[item.cid] && categoryObj[item.cid].coverImage
+										? categoryObj[item.cid].coverImage
+										: require('~/static/image/unknown.jpg')
+								"
+							/>
+						</div>
+						<div class="col text">
+							<div class="title">{{ item.title }}</div>
+							<div class="describe">{{ item.describe }}</div>
+						</div>
+						<div class="col date">
+							<div class="title">创建时间</div>
+							<div class="describe">{{ $tool.dateFormat(new Date(item.createdTime)) }}</div>
+						</div>
+						<div class="col publish">
+							<div class="title">发布</div>
+							<div class="describe">
+								<el-switch @change="publishChange(item)" v-model="item.publish_state"></el-switch>
+							</div>
+						</div>
+						<div class="col edit">
+							<nuxt-link :to="'/post/edit?pid=' + item.pid">编辑</nuxt-link>
+						</div>
+						<div class="col more">
+							<el-dropdown @command="handleCommand" @visible-change="currentEditIndex = index">
+								<span class="el-dropdown-link">
+									更多
+									<i class="el-icon-arrow-down el-icon--right"></i>
+								</span>
+								<el-dropdown-menu slot="dropdown">
+									<el-dropdown-item command="edit">快捷编辑</el-dropdown-item>
+									<el-dropdown-item command="delete">删除</el-dropdown-item>
+								</el-dropdown-menu>
+							</el-dropdown>
 						</div>
 					</div>
-					<div class="col edit">
-						<nuxt-link :to="'/post/edit?pid=' + item.pid">编辑</nuxt-link>
-					</div>
-					<div class="col more">
-						<el-dropdown @command="handleCommand" @visible-change="currentEditIndex = index">
-							<span class="el-dropdown-link">
-								更多
-								<i class="el-icon-arrow-down el-icon--right"></i>
-							</span>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="edit">快捷编辑</el-dropdown-item>
-								<el-dropdown-item command="delete">删除</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-					</div>
+				</transition-group>
+				<div class="no_data" v-else>
+					暂无数据
 				</div>
-			</transition-group>
+			</div>
 			<div class="paged" v-if="count.total >= 10">
 				<el-pagination
 					@current-change="currentChange"
@@ -101,7 +112,7 @@
 			</div>
 			<div class="modal_footer">
 				<el-button size="mini" @click="dialogVisible = false">取消</el-button>
-				<el-button type="primary" size="mini">确定</el-button>
+				<el-button type="primary" size="mini" @click="updatePost">确定</el-button>
 			</div>
 		</el-dialog>
 	</main>
@@ -129,6 +140,7 @@ export default {
 			categoryObj: {},
 			currentPublish: 1,
 			isPublish: 0,
+			loading: null,
 		};
 	},
 	methods: {
@@ -144,6 +156,7 @@ export default {
 							pid: this.listData[this.currentEditIndex].pid,
 						});
 						if (res.data.code === 8888) {
+							await this.getData(this.currentPage, true);
 							this.$message({
 								type: "success",
 								message: "删除成功!",
@@ -151,7 +164,6 @@ export default {
 						}
 					})
 					.catch((error) => {
-						console.log(error);
 						this.$message({
 							type: "info",
 							message: "已取消删除",
@@ -166,6 +178,11 @@ export default {
 			await this.getData(page);
 		},
 		async getData(page, lock) {
+			if (!this.loading) {
+				this.loading = this.$loading.service({
+					target: this.$refs.datalist,
+				});
+			}
 			let option = {
 					page: page ? page : this.currentPage,
 					count: lock,
@@ -176,12 +193,18 @@ export default {
 			if (this.search) option.title = this.search;
 			if (this.search) option.title = this.search;
 			if (this.isPublish) option.isPublish = this.isPublish;
-			res = await this.$request.getPostList(option);
-			this.listData = res.data.postList;
-			if (lock) {
-				this.count.total = res.data.published + res.data.unpublished;
-				this.count.published = res.data.published;
-				this.count.unpublished = res.data.unpublished;
+			if (this.currentCategory) option.cid = this.currentCategory;
+			try {
+				res = await this.$request.getPostList(option);
+				this.listData = res.data.postList;
+				if (lock) {
+					this.count.total = res.data.published + res.data.unpublished;
+					this.count.published = res.data.published;
+					this.count.unpublished = res.data.unpublished;
+				}
+				this.loading.close();
+			} catch (error) {
+				this.loading.close();
 			}
 		},
 		async getCategory() {
@@ -192,25 +215,6 @@ export default {
 					this.categoryObj[this.categoryList[i].cid] = this.categoryList[i];
 				}
 			}
-		},
-		dateFormat(date, fmt = "YYYY-mm-dd HH:MM") {
-			let ret;
-			const opt = {
-				"Y+": date.getFullYear().toString(), // 年
-				"m+": (date.getMonth() + 1).toString(), // 月
-				"d+": date.getDate().toString(), // 日
-				"H+": date.getHours().toString(), // 时
-				"M+": date.getMinutes().toString(), // 分
-				"S+": date.getSeconds().toString(), // 秒
-				// 有其他格式化字符需求可以继续添加，必须转化成字符串
-			};
-			for (let k in opt) {
-				ret = new RegExp("(" + k + ")").exec(fmt);
-				if (ret) {
-					fmt = fmt.replace(ret[1], ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, "0"));
-				}
-			}
-			return fmt;
 		},
 		async handleSearch() {
 			await this.getData();
@@ -226,8 +230,60 @@ export default {
 			}
 			await this.getData();
 		},
+		async publishChange(item) {
+			this.loading = this.$loading.service({
+				target: this.$refs.datalist,
+			});
+			try {
+				let res = await this.handleUpdate({
+					pid: item.pid,
+					publish_state: item.publish_state,
+				});
+				if (res) {
+					//修改成功
+					if (item.publish_state) {
+						//从未发布改为发布
+						this.count.published++;
+						this.count.unpublished--;
+					} else {
+						this.count.published--;
+						this.count.unpublished++;
+					}
+				}
+				this.loading.close();
+			} catch (error) {
+				this.loading.close();
+			}
+		},
+		async handleUpdate(option) {
+			let res = await this.$request.updatePost(option);
+			if (res.data.code === 8888) {
+				this.$message({
+					type: "success",
+					message: "已修改",
+				});
+				return true;
+			} else {
+				this.$message.error("修改失败");
+				return false;
+			}
+		},
+		updatePost() {
+			let option = {};
+			console.log(this.currentEdit.cid, this.listData[this.currentEditIndex]);
+			if (this.currentEdit.cid !== this.listData[this.currentEditIndex].cid) {
+				console.log(123);
+			}
+			// this.handleUpdate({
+
+			// });
+		},
 	},
-	async created() {
+	async created() {},
+	async mounted() {
+		this.loading = this.$loading.service({
+			target: this.$refs.datalist,
+		});
 		await this.getCategory();
 		this.getData(this.currentPage, true);
 	},
@@ -388,6 +444,7 @@ export default {
 		}
 	}
 	.el-dialog {
+		min-width: 300px;
 		border-radius: 5px;
 	}
 	.el-dialog__body {
@@ -449,6 +506,15 @@ export default {
 		justify-content: flex-end;
 		border-top: 1px solid #ebeef5;
 		padding: 20px 20px 0;
+	}
+	.no_data {
+		padding: 20px;
+		text-align: center;
+		border-bottom: 1px solid #ebeef5;
+		font-size: 12px;
+	}
+	.list {
+		position: relative;
 	}
 }
 </style>

@@ -55,6 +55,10 @@ module.exports = {
 			src: "@/plugins/events",
 			ssr: false,
 		},
+		{
+			src: "@/plugins/tool",
+			ssr: false,
+		},
 	],
 	axios: {},
 	/*

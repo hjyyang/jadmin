@@ -254,7 +254,7 @@ router.post("/update", async (ctx) => {
  */
 router.get("/detele", async (ctx) => {
 	let { pid } = ctx.request.query;
-	if (!pid || (pid && isNaN(parseInt(pid))) || (pid && Array.isArray(pid))) {
+	if (!pid || isNaN(parseInt(pid)) || (pid && Array.isArray(pid))) {
 		return (ctx.body = {
 			code: 8002,
 			message: "Please enter the correct field or value!",

@@ -193,7 +193,7 @@ let Categorys = sequelize.define(
 );
 dataTables.Categorys = Categorys;
 
-Posts.hasOne(Categorys, { foreignKey: "id" });
+Posts.belongsTo(Categorys, { foreignKey: "cid" });
 
 let Statistics = sequelize.define(
 	"statistics",

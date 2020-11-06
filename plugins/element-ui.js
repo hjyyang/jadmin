@@ -1,37 +1,40 @@
 import Vue from "vue";
 import {
-  Avatar,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Menu,
-  Submenu,
-  MenuItem,
-  MenuItemGroup,
-  Collapse,
-  CollapseItem,
-  Input,
-  InputNumber,
-  Switch,
-  Button,
-  Message,
-  Radio,
-  RadioGroup,
-  RadioButton,
-  Popconfirm,
-  Form,
-  FormItem,
-  Upload,
-  MessageBox,
-  Dialog,
-  Tag,
-  Pagination,
-  ColorPicker,
-  Select,
-  Option,
-  ButtonGroup,
-  DatePicker,
-  Drawer
+	Avatar,
+	Dropdown,
+	DropdownMenu,
+	DropdownItem,
+	Menu,
+	Submenu,
+	MenuItem,
+	MenuItemGroup,
+	Collapse,
+	CollapseItem,
+	Input,
+	InputNumber,
+	Switch,
+	Button,
+	Message,
+	Radio,
+	RadioGroup,
+	RadioButton,
+	Popconfirm,
+	Form,
+	FormItem,
+	Upload,
+	MessageBox,
+	Dialog,
+	Tag,
+	Pagination,
+	ColorPicker,
+	Select,
+	Option,
+	ButtonGroup,
+	DatePicker,
+	Drawer,
+	Table,
+	TableColumn,
+	Loading,
 } from "element-ui";
 import lang from "element-ui/lib/locale/lang/zh-CN";
 import locale from "element-ui/lib/locale";
@@ -69,5 +72,8 @@ Vue.use(Option);
 Vue.use(ButtonGroup);
 Vue.use(DatePicker);
 Vue.use(Drawer);
+Vue.use(Table);
+Vue.use(TableColumn);
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$loading = Loading;
