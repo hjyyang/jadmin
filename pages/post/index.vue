@@ -131,6 +131,7 @@ export default {
 			dialogVisible: false,
 			currentEditIndex: 0,
 			currentEdit: {},
+			oldEdit: {},
 			currentPage: 1,
 			count: {
 				total: 0,
@@ -170,6 +171,7 @@ export default {
 						});
 					});
 			} else if (command == "edit") {
+				Object.assign(this.oldEdit, this.listData[this.currentEditIndex]);
 				this.currentEdit = this.listData[this.currentEditIndex];
 				this.dialogVisible = true;
 			}
@@ -268,18 +270,32 @@ export default {
 				return false;
 			}
 		},
-		updatePost() {
-			let option = {};
-			console.log(this.currentEdit.cid, this.listData[this.currentEditIndex]);
-			if (this.currentEdit.cid !== this.listData[this.currentEditIndex].cid) {
-				console.log(123);
+		async updatePost() {
+			let option = {
+				pid: this.currentEdit.pid,
+			};
+			if (this.currentEdit.cid !== this.oldEdit.cid) {
+				//修改了分类
+				option.cid = this.currentEdit.cid;
 			}
-			// this.handleUpdate({
-
-			// });
+			if (this.currentEdit.describe !== this.oldEdit.describe) {
+				//修改了描述
+				option.describe = this.currentEdit.describe;
+			}
+			if (this.currentEdit.comment !== this.oldEdit.comment) {
+				//修改了描述
+				option.comment = this.currentEdit.comment;
+			}
+			await this.handleUpdate(option);
+			this.dialogVisible = false;
 		},
 	},
-	async created() {},
+	async created() {
+		let page = this.$route.query.page;
+		if (page && !isNaN(parseInt(page))) {
+			this.currentPage = page;
+		}
+	},
 	async mounted() {
 		this.loading = this.$loading.service({
 			target: this.$refs.datalist,

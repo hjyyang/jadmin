@@ -213,10 +213,11 @@ router.post("/add", async (ctx) => {
  * @param  {[string]}  describe        post描述
  * @param  {[number]}  cid             分类id
  * @param  {[boolean]} publish_state   post发布状态,0||1
- * @param  {[string]}  cover_image     post封面图
+ * @param  {[string]}  coverImage     post封面图
+ * @param  {[boolean]} comment         是否开启评论
  */
 router.post("/update", async (ctx) => {
-	let { pid, content, cid, title, describe, publish_state, cover_image } = ctx.request.body;
+	let { pid, content, cid, title, describe, publish_state, coverImage, comment } = ctx.request.body;
 	if (!pid || isNaN(parseInt(pid))) {
 		return (ctx.body = {
 			code: 8002,
@@ -224,12 +225,13 @@ router.post("/update", async (ctx) => {
 		});
 	}
 	let option = {
-			title: title,
-			content: content,
-			cid: cid,
-			describe: describe,
-			publish_state: publish_state,
-			cover_image: cover_image,
+			title,
+			content,
+			cid,
+			describe,
+			publish_state,
+			cover_image: coverImage,
+			comment,
 		},
 		where = {
 			where: { id: pid },
