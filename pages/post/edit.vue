@@ -6,16 +6,16 @@
 					<i class="iconfont icon-return"></i>
 				</div>
 				<div class="title">
-					<input type="text" placeholder="输入标题..." />
+					<input type="text" @input="contentChange" v-model="postData.title" placeholder="输入标题..." />
 				</div>
-				<div class="message">文章自动保存到草稿</div>
+				<div class="message">{{ saveState ? "保存中..." : "文章自动保存为草稿" }}</div>
 				<el-dropdown class="cover_img_btn" trigger="click">
 					<i class="el-icon-picture"></i>
 					<el-dropdown-menu slot="dropdown" class="cover_img">
 						<h4>添加文章封面</h4>
 						<div class="pic">
-							<img src="" />
-							<button>点击这里添加图片</button>
+							<img :src="postData.coverImage" v-if="postData.coverImage" />
+							<button v-else>点击这里添加图片</button>
 						</div>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -25,30 +25,26 @@
 			</div>
 		</header>
 		<main>
-			<JEditor :hljs="hljs" :languages="languages"></JEditor>
+			<JEditor :hljs="hljs" :languages="languages" v-model="postData.content" @input="contentChange"></JEditor>
 		</main>
 
 		<el-drawer :visible.sync="drawerVisible" direction="rtl" size="24%" class="edit_drawer">
-			<el-button type="primary" class="publish_btn">{{ postData.status === 0 ? "确定并发布" : "修改" }}</el-button>
+			<el-button type="primary" class="publish_btn" @click="handlePublish" :loading="saveState">{{
+				saveState ? "保存中..." : btnState === 0 ? "发布" : btnState === 1 ? "修改" : "取消发布"
+			}}</el-button>
 			<div class="category_wrap">
 				<h4>分类</h4>
-				<el-radio-group v-model="postData.category" size="small">
-					<el-radio :label="item.cValue" v-for="(item, index) in postData.categoryList" :key="index">{{ item.cName }}</el-radio>
+				<el-radio-group v-model="postData.cid" size="small" @change="contentChange">
+					<el-radio :label="item.cid" v-for="(item, index) in categoryList" :key="index">{{ item.name }}</el-radio>
 				</el-radio-group>
-				<div class="new-wrap">
-					<div class="new_input">
-						<el-input ref="saveCategoryInput" placeholder="新增分类名"></el-input>
-						<el-button type="primary" icon="el-icon-check"></el-button>
-					</div>
-				</div>
 			</div>
 			<div class="describe_wrap">
 				<h4>描述</h4>
-				<el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="postData.describe"></el-input>
+				<el-input type="textarea" :rows="4" placeholder="请输入内容" @input="contentChange" v-model="postData.describe"></el-input>
 			</div>
 			<div class="comment_status">
 				<h4>评论</h4>
-				<el-switch v-model="postData.comment" active-icon-class="el-icon-check"></el-switch>&nbsp;开启评论
+				<el-switch v-model="postData.comment" active-icon-class="el-icon-check" @change="contentChange"></el-switch>&nbsp;开启评论
 			</div>
 		</el-drawer>
 	</div>
@@ -75,13 +71,140 @@ export default {
 			},
 			drawerVisible: false,
 			postData: {
-				describe: "",
-				comment: false,
-				categoryList: [],
+				title: "",
+				publish_state: false,
 			},
+			oldData: {},
+			btnState: 0, //发布或修改按钮的状态：0:发布，1:修改，2取消发布
+			timer: null,
+			isLock: true,
+			categoryList: [],
+			pathId: 0,
+			saveState: false,
 		};
 	},
-	mounted() {},
+	methods: {
+		//获取post数据
+		async getData(pid) {
+			let res = await this.$request.getPost({
+				pid,
+			});
+			if (res.data.code === 8888) {
+				this.postData = res.data.post;
+				Object.assign(this.oldData, res.data.post);
+				this.isBtnState();
+			} else {
+				this.$router.push({
+					query: {},
+				});
+				this.$message({
+					type: "info",
+					message: "未找到该文章",
+				});
+			}
+		},
+		//post内容（数据）改变时
+		contentChange() {
+			if (this.isLock) return false;
+			this.handleUpdate();
+		},
+		//判断是否需要更新
+		async handleUpdate() {
+			let old = this.oldData,
+				news = this.postData;
+			if (
+				old.content != news.content ||
+				old.title != news.title ||
+				old.coverImage != news.coverImage ||
+				old.describe != news.describe ||
+				old.comment != news.comment ||
+				old.cid != news.cid
+			) {
+				//post内容更新
+				this.btnState = 1;
+				if (this.timer) {
+					clearTimeout(this.timer);
+				}
+				this.timer = setTimeout(() => {
+					//延时两秒后自动保存
+					this.handlePublish();
+				}, 2000);
+			} else {
+				//post内容未更新
+				this.isBtnState();
+			}
+		},
+		//判断按钮状态
+		isBtnState() {
+			if (this.postData.publish_state) {
+				//文章已发布
+				this.btnState = 2;
+			} else {
+				//文章未发布
+				this.btnState = 0;
+			}
+		},
+		//发布（修改）判断
+		handlePublish() {
+			//判断是修改或是发布
+			this.saveState = true;
+			if (this.timer) {
+				clearTimeout(this.timer);
+			}
+			if (this.pathId) {
+				//url上存在id，即非新增post，修改post
+				this.postUpdate({
+					pid: this.pathId,
+					title: this.postData.title,
+					content: this.postData.content,
+					describe: this.postData.describe,
+					cid: this.postData.cid,
+					publish_state: this.postData.publish_state,
+					coverImage: this.postData.coverImage,
+					comment: this.postData.comment,
+				});
+			} else {
+				//未存在id，新增post
+				this.addPost({
+					title: this.postData.title,
+					content: this.postData.content,
+					describe: this.postData.describe,
+					cid: this.postData.cid,
+					publish_state: this.postData.publish_state,
+					coverImage: this.postData.coverImage,
+					comment: this.postData.comment,
+				});
+			}
+		},
+		//更新post
+		async postUpdate(option) {
+			await this.$request.updatePost(option);
+			this.saveState = false;
+			this.isBtnState();
+			this.contentChange();
+		},
+		//添加post
+		async addPost(option) {
+			let res = await this.$request.addPost();
+			console.log(res.data);
+		},
+		//获取分类列表
+		async getCategory() {
+			let res = await this.$request.getCategoryList();
+			if (res.data.code === 8888) {
+				this.categoryList = res.data.categoryList;
+			}
+		},
+	},
+	async created() {
+		this.pathId = this.$route.query.pid;
+		this.getCategory();
+		if (this.pathId && !isNaN(parseInt(this.pathId))) {
+			await this.getData(this.pathId);
+		} else {
+			this.isLock = false;
+		}
+	},
 };
 </script>
 

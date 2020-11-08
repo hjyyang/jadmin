@@ -143,20 +143,29 @@ router.get("/find", async (ctx) => {
 			["id", "id"],
 			["title", "title"],
 			["describe", "describe"],
-			["createdAt", "createdAt"],
-			["updatedAt", "last_modified_date"],
+			["createdAt", "createdTime"],
+			["updatedAt", "updateTime"],
 			["publish_state", "publish_state"],
 			["cid", "cid"],
 			["content", "content"],
+			["comment", "comment"],
+			["cover_image", "coverImage"],
 		],
 	};
 	try {
 		let res = await Posts.findOne(option);
-		return (ctx.body = {
-			code: 8888,
-			message: "successful",
-			post: res,
-		});
+		if (res) {
+			return (ctx.body = {
+				code: 8888,
+				message: "successful",
+				post: res,
+			});
+		}else{
+            return (ctx.body = {
+				code: 8007,
+				message: "not found",
+			});
+        }
 	} catch (error) {
 		return (ctx.body = {
 			code: 8003,
