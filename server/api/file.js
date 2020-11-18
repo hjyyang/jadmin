@@ -86,7 +86,15 @@ router.get("/update", async (ctx) => {
 
 //查找文件列表
 router.get("/find", async (ctx) => {
-	let list = await fileMethod.getAll();
+	let { type } = ctx.request.query,
+		fileType = [];
+	if (type) {
+		if (type == "image") {
+			//查找图片文件
+			fileType = ["jpg", "jpeg", "png", "gif"];
+		}
+	}
+	let list = await fileMethod.getAll(fileType);
 	ctx.body = {
 		code: 8888,
 		message: "successful",

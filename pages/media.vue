@@ -24,17 +24,11 @@
 							<em>点击上传</em>
 						</div>
 						<div class="el-upload__tip" slot="tip">上传文件大小不能超过20MB</div>
-						<div
-							slot="file"
-							slot-scope="{file}"
-							class="file_item"
-							@click="fileDetail(file)"
-							:name="file.name"
-						>
-							<img :src="file.url" v-if="fileType(file.name)=='image'" />
-							<i class="el-icon-video-camera file_icon" v-else-if="fileType(file.name)=='video'"></i>
+						<div slot="file" slot-scope="{ file }" class="file_item" @click="fileDetail(file)" :name="file.name">
+							<img :src="file.url" v-if="fileType(file.name) == 'image'" />
+							<i class="el-icon-video-camera file_icon" v-else-if="fileType(file.name) == 'video'"></i>
 							<i class="el-icon-document file_icon" v-else></i>
-							<label class="el-upload-list__item-status-label" v-show="file.status=='success'">
+							<label class="el-upload-list__item-status-label" v-show="file.status == 'success'">
 								<i class="el-icon-upload-success el-icon-check"></i>
 							</label>
 							<i class="el-icon-close" @click.stop="beforeRemove(file)"></i>
@@ -47,8 +41,8 @@
 		<el-dialog title="详情" :visible.sync="dialogVisible" width="50%" class="image_detail">
 			<div class="container">
 				<div class="rahmen">
-					<img :src="currentFile.url" v-if="fileType(currentFile.suffix)=='image'" />
-					<template v-else-if="fileType(currentFile.suffix)=='video'">
+					<img :src="currentFile.url" v-if="fileType(currentFile.suffix) == 'image'" />
+					<template v-else-if="fileType(currentFile.suffix) == 'video'">
 						<video :src="currentFile.url" controls width="100%"></video>
 					</template>
 				</div>
@@ -77,12 +71,9 @@
 						<div>{{ currentFile.suffix }}</div>
 					</div>
 					<div class="row">
-						<el-button
-							type="primary"
-							size="mini"
-							:loading="saveStatus"
-							@click="rename"
-						>{{ !editStatus ? "修改" : currentFile.name===oldName ?"修改":"保存" }}</el-button>
+						<el-button type="primary" size="mini" :loading="saveStatus" @click="rename">{{
+							!editStatus ? "修改" : currentFile.name === oldName ? "修改" : "保存"
+						}}</el-button>
 					</div>
 				</div>
 			</div>
@@ -114,8 +105,7 @@ export default {
 		};
 	},
 	mounted() {
-		this.uploadHeaders.authorization =
-			"Bearer " + this.$store.state.authUser.token;
+		this.uploadHeaders.authorization = "Bearer " + this.$store.state.authUser.token;
 		this.formData = new FormData();
 		this.getFileList();
 	},
@@ -238,8 +228,7 @@ export default {
 				if (this.currentFile.name !== this.oldName) {
 					let oldUrl = this.currentFile.url,
 						newUrl = oldUrl.split("/");
-					newUrl[newUrl.length - 1] =
-						this.currentFile.name + "." + this.currentFile.suffix;
+					newUrl[newUrl.length - 1] = this.currentFile.name + "." + this.currentFile.suffix;
 					newUrl = newUrl.join("/");
 					this.saveStatus = true;
 					try {
@@ -249,15 +238,9 @@ export default {
 						});
 						console.log(res.data);
 						if (res.data.code === 8888) {
-							this.fileList[
-								this.currentIndex
-							].url = this.currentFile.url = res.data.url;
-							this.fileList[
-								this.currentIndex
-							].name = this.postfix(res.data.url).fullName;
-							this.currentFile.name = this.postfix(
-								res.data.url
-							).name;
+							this.fileList[this.currentIndex].url = this.currentFile.url = res.data.url;
+							this.fileList[this.currentIndex].name = this.postfix(res.data.url).fullName;
+							this.currentFile.name = this.postfix(res.data.url).name;
 						} else {
 							this.$message.error("文件地址有误");
 						}

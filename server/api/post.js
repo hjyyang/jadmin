@@ -181,10 +181,10 @@ router.get("/find", async (ctx) => {
  * @param  {[string]}  describe        post描述
  * @param  {[number]}  cid             分类id
  * @param  {[boolean]} publish_state   post发布状态,0||1
- * @param  {[string]}  cover_image     post封面图
+ * @param  {[string]}  coverImage     post封面图
  */
 router.post("/add", async (ctx) => {
-	let { content, cid, title, describe, publish_state, cover_image } = ctx.request.body;
+	let { content, cid, title, describe, publish_state, coverImage } = ctx.request.body;
 	if ((!!publish_state && isNaN(parseInt(publish_state))) || (!!cid && isNaN(parseInt(cid)))) {
 		return (ctx.body = {
 			code: 8002,
@@ -197,7 +197,7 @@ router.post("/add", async (ctx) => {
 	if (!!title) option.title = title;
 	if (!!publish_state) option.publish_state = publish_state;
 	if (!!describe) option.describe = describe;
-	if (!!cover_image) option.cover_image = cover_image;
+	if (!!coverImage) option.cover_image = coverImage;
 	try {
 		let res = await Posts.create(option);
 		return (ctx.body = {

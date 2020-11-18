@@ -11,6 +11,7 @@
 import Header from "../components/header";
 import Side from "../components/side";
 export default {
+	name: "default-layout",
 	components: {
 		Header,
 		Side,

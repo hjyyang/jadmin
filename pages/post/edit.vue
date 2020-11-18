@@ -2,18 +2,18 @@
 	<div class="edit-page">
 		<header>
 			<div class="header-wrap">
-				<div class="return_btn" @click="$router.go(-1)">
+				<nuxt-link class="return_btn" to="/post">
 					<i class="iconfont icon-return"></i>
-				</div>
+				</nuxt-link>
 				<div class="title">
 					<input type="text" @input="contentChange" v-model="postData.title" placeholder="输入标题..." />
 				</div>
 				<div class="message">{{ saveState ? "保存中..." : "文章自动保存为草稿" }}</div>
-				<el-dropdown class="cover_img_btn" trigger="click">
+				<el-dropdown class="cover_img_btn">
 					<i class="el-icon-picture"></i>
 					<el-dropdown-menu slot="dropdown" class="cover_img">
-						<h4>添加文章封面</h4>
-						<div class="pic">
+						<h4 v-show="!postData.coverImage">添加文章封面</h4>
+						<div class="pic" @click="addCover">
 							<img :src="postData.coverImage" v-if="postData.coverImage" />
 							<button v-else>点击这里添加图片</button>
 						</div>
@@ -27,9 +27,9 @@
 		<main>
 			<JEditor :hljs="hljs" :languages="languages" v-model="postData.content" @input="contentChange"></JEditor>
 		</main>
-
+		<MediaPopup :dialogVisible.sync="mediaVisible" :on-select="fileSelect" />
 		<el-drawer :visible.sync="drawerVisible" direction="rtl" size="24%" class="edit_drawer">
-			<el-button type="primary" class="publish_btn" @click="handlePublish" :loading="saveState">{{
+			<el-button type="primary" class="publish_btn" @click="handlePublish(true)" :loading="saveState">{{
 				saveState ? "保存中..." : btnState === 0 ? "发布" : btnState === 1 ? "修改" : "取消发布"
 			}}</el-button>
 			<div class="category_wrap">
@@ -57,10 +57,12 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import "vue-jeditor/dist/src/css/style.css";
 import "highlight.js/styles/monokai-sublime.css";
+import media from "~/components/media";
 export default {
 	layout: "edit",
 	components: {
 		JEditor: JEditor.jEditor,
+		MediaPopup: media,
 	},
 	data() {
 		return {
@@ -81,6 +83,7 @@ export default {
 			categoryList: [],
 			pathId: 0,
 			saveState: false,
+			mediaVisible: false,
 		};
 	},
 	methods: {
@@ -127,14 +130,14 @@ export default {
 				}
 				this.timer = setTimeout(() => {
 					//延时两秒后自动保存
-					this.handlePublish();
+					this.handlePublish(false);
 				}, 2000);
 			} else {
 				//post内容未更新
 				this.isBtnState();
 			}
 		},
-		//判断按钮状态
+		//修改按钮状态
 		isBtnState() {
 			if (this.postData.publish_state) {
 				//文章已发布
@@ -145,12 +148,16 @@ export default {
 			}
 		},
 		//发布（修改）判断
-		handlePublish() {
+		handlePublish(isClick) {
 			//判断是修改或是发布
-			this.saveState = true;
 			if (this.timer) {
 				clearTimeout(this.timer);
 			}
+			if (isClick) {
+				//点击按钮触发
+				this.postData.publish_state = this.btnState == 0 ? true : this.btnState == 1 ? this.postData.publish_state : false;
+			}
+			this.saveState = true;
 			if (this.pathId) {
 				//url上存在id，即非新增post，修改post
 				this.postUpdate({
@@ -181,12 +188,19 @@ export default {
 			await this.$request.updatePost(option);
 			this.saveState = false;
 			this.isBtnState();
-			this.contentChange();
 		},
 		//添加post
 		async addPost(option) {
-			let res = await this.$request.addPost();
-			console.log(res.data);
+			let res = await this.$request.addPost(option);
+			if (res.data.code === 8888) {
+				this.$router.push({
+					path: "/post/edit",
+					query: { pid: res.data.pid },
+				});
+				this.pathId = res.data.pid;
+			}
+			this.saveState = false;
+			this.isBtnState();
 		},
 		//获取分类列表
 		async getCategory() {
@@ -195,12 +209,23 @@ export default {
 				this.categoryList = res.data.categoryList;
 			}
 		},
+		//添加海报图
+		addCover() {
+			this.mediaVisible = true;
+		},
+		//选择文件
+		fileSelect(file) {
+			this.postData.coverImage = file.url;
+			this.mediaVisible = false;
+			this.contentChange();
+		},
 	},
 	async created() {
 		this.pathId = this.$route.query.pid;
 		this.getCategory();
 		if (this.pathId && !isNaN(parseInt(this.pathId))) {
 			await this.getData(this.pathId);
+			this.isLock = false;
 		} else {
 			this.isLock = false;
 		}
@@ -236,6 +261,7 @@ export default {
 		cursor: pointer;
 		transition: all 0.2s;
 		font-size: 30px;
+		color: #707070;
 		&:hover {
 			color: rgba($color: #409eff, $alpha: 0.8);
 		}
@@ -270,6 +296,7 @@ export default {
 		}
 		i {
 			font-size: 26px;
+			outline: none;
 		}
 	}
 	.more_btn {
@@ -295,6 +322,9 @@ export default {
 			margin-bottom: 10px;
 			font-size: 18px;
 			color: rgba(119, 127, 141, 0.8);
+		}
+		.pic {
+			cursor: pointer;
 		}
 		button {
 			width: 100%;
