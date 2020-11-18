@@ -186,6 +186,7 @@ export default {
 		//更新post
 		async postUpdate(option) {
 			await this.$request.updatePost(option);
+			this.postData.title = this.postData.title ? this.postData.title : "no title";
 			this.saveState = false;
 			this.isBtnState();
 		},
@@ -198,6 +199,7 @@ export default {
 					query: { pid: res.data.pid },
 				});
 				this.pathId = res.data.pid;
+				this.postData.title = this.postData.title ? this.postData.title : "no title";
 			}
 			this.saveState = false;
 			this.isBtnState();

@@ -160,12 +160,12 @@ router.get("/find", async (ctx) => {
 				message: "successful",
 				post: res,
 			});
-		}else{
-            return (ctx.body = {
+		} else {
+			return (ctx.body = {
 				code: 8007,
 				message: "not found",
 			});
-        }
+		}
 	} catch (error) {
 		return (ctx.body = {
 			code: 8003,
@@ -194,7 +194,7 @@ router.post("/add", async (ctx) => {
 	let option = {};
 	if (!!content) option.content = content;
 	if (!!cid) option.cid = cid;
-	if (!!title) option.title = title;
+	if (!!title) option.title = title ? title : "no title";
 	if (!!publish_state) option.publish_state = publish_state;
 	if (!!describe) option.describe = describe;
 	if (!!coverImage) option.cover_image = coverImage;
@@ -234,7 +234,7 @@ router.post("/update", async (ctx) => {
 		});
 	}
 	let option = {
-			title,
+			title: title ? title : "no title",
 			content,
 			cid,
 			describe,
