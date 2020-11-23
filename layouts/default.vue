@@ -21,6 +21,7 @@ export default {
 		return {
 			pageName: this.$route.name + "-page",
 			sideOPen: true,
+			notificattion: [],
 		};
 	},
 	mounted() {
@@ -64,7 +65,10 @@ export default {
 			} else {
 				this.sideOPen = false;
 			}
-		},
+        },
+        async getNotification(){
+            
+        }
 	},
 	watch: {
 		$route: {

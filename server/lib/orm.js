@@ -257,6 +257,7 @@ let LeaveMessage = sequelize.define(
 			autoIncrement: true,
 		},
 		uid: Sequelize.INTEGER,
+		username: Sequelize.STRING,
 		leaveId: Sequelize.INTEGER,
 		createdAt: Sequelize.DATE,
 		browser: Sequelize.STRING,

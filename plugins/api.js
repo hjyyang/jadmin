@@ -87,6 +87,14 @@ const request = {
 	deteleComment: new Api("/j_api/comment/detele"),
 	//查询评论列表
 	getCommentList: new Api("/j_api/comment/list"),
+
+	/**********************************留言接口************************************/
+	//添加留言
+	addLeaveMessage: new Api("/j_api/leave/add", "post"),
+	//删除留言
+	deteleLeaveMessage: new Api("/j_api/leave/detele"),
+	//查询留言列表
+	getLeaveMessageList: new Api("/j_api/leave/list"),
 };
 let axios = null;
 export default function (app, inject) {

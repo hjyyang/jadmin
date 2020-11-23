@@ -105,6 +105,7 @@ router.get("/list", async (ctx) => {
 			["os", "os"],
 			["province", "province"],
 			["city", "city"],
+			["username","username"],
 		],
 		raw: true,
 	};
