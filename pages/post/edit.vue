@@ -1,5 +1,5 @@
 <template>
-	<div class="edit-page">
+	<div id="edit_page">
 		<header>
 			<div class="header-wrap">
 				<nuxt-link class="return_btn" to="/post">
@@ -9,7 +9,7 @@
 					<input type="text" @input="contentChange" v-model="postData.title" placeholder="输入标题..." />
 				</div>
 				<div class="message">{{ saveState ? "保存中..." : "文章自动保存为草稿" }}</div>
-				<el-dropdown class="cover_img_btn">
+				<el-dropdown class="cover_img_btn" :append-to-body="false">
 					<i class="el-icon-picture"></i>
 					<el-dropdown-menu slot="dropdown" class="cover_img">
 						<h4 v-show="!postData.coverImage">添加文章封面</h4>
@@ -236,7 +236,7 @@ export default {
 </script>
 
 <style lang="scss">
-.post-edit-page {
+#edit_page {
 	height: 100%;
 	.j-editor,
 	.edit-page {
@@ -316,30 +316,6 @@ export default {
 			font-size: 20px;
 		}
 	}
-	.cover_img {
-		width: 310px;
-		padding: 20px;
-		text-align: center;
-		h4 {
-			margin-bottom: 10px;
-			font-size: 18px;
-			color: rgba(119, 127, 141, 0.8);
-		}
-		.pic {
-			cursor: pointer;
-		}
-		button {
-			width: 100%;
-			height: 96px;
-			border: none;
-			color: rgba(51, 51, 51, 0.4);
-			background-color: hsla(0, 0%, 87.1%, 0.6);
-			outline: none;
-			font-size: 16px;
-			cursor: pointer;
-			transition: all 0.3s;
-		}
-	}
 	.edit_drawer {
 		outline: none;
 		header {
@@ -404,6 +380,32 @@ export default {
 		}
 		.comment_status {
 			padding-top: 30px;
+		}
+	}
+}
+.post-edit-page {
+	.cover_img {
+		width: 310px;
+		padding: 20px;
+		text-align: center;
+		h4 {
+			margin-bottom: 10px;
+			font-size: 18px;
+			color: rgba(119, 127, 141, 0.8);
+		}
+		.pic {
+			cursor: pointer;
+		}
+		button {
+			width: 100%;
+			height: 96px;
+			border: none;
+			color: rgba(51, 51, 51, 0.4);
+			background-color: hsla(0, 0%, 87.1%, 0.6);
+			outline: none;
+			font-size: 16px;
+			cursor: pointer;
+			transition: all 0.3s;
 		}
 	}
 }

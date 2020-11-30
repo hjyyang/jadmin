@@ -35,9 +35,9 @@
 					<i class="el-icon-s-custom"></i>
 					<span>用户</span>
 				</el-menu-item>
-				<el-menu-item index="/comments">
+				<el-menu-item index="/reply">
 					<i class="el-icon-s-comment"></i>
-					<span>评论</span>
+					<span>回复</span>
 				</el-menu-item>
 				<el-menu-item index="/settings">
 					<i class="el-icon-s-tools"></i>
