@@ -266,6 +266,11 @@ let LeaveMessage = sequelize.define(
 		province: Sequelize.STRING,
 		city: Sequelize.STRING,
 		content: Sequelize.STRING,
+		read: {
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: 0,
+		},
 	},
 	{
 		timestamps: false,

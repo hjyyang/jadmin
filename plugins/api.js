@@ -95,6 +95,14 @@ const request = {
 	deteleLeaveMessage: new Api("/j_api/leave/detele"),
 	//查询留言列表
 	getLeaveMessageList: new Api("/j_api/leave/list"),
+
+	/**********************************通知接口************************************/
+	//查询通知
+	findNotification: new Api("/j_api/notification/find"),
+	//添加通知
+	addNotification: new Api("/j_api/notification/add", "post"),
+	//更新通知状态
+	updateNotification: new Api("/j_api/notification/update"),
 };
 let axios = null;
 export default function (app, inject) {

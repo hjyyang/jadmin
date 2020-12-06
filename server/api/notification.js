@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const { Notifications, NotificationTermUser, mySequelize } = require("../lib/orm");
+const Notifications = require("../common/notification");
 
 const router = new Router({
 	prefix: "/j_api/notification",
@@ -20,36 +20,18 @@ router.post("/add", async (ctx) => {
 			message: "Please enter the correct field or value!",
 		});
 	}
-	let option = {
-		message,
-		type,
-		object_id: pid,
-	};
-	await mySequelize.transaction(async (t) => {
-		try {
-			let res = await Notifications.create(option, {
-				transaction: t,
-			});
-			await NotificationTermUser.create(
-				{
-					uid,
-					note_id: res.dataValues.id,
-				},
-				{
-					transaction: t,
-				}
-			);
-			return (ctx.body = {
-				code: 8888,
-				message: "successful",
-			});
-		} catch (error) {
-			return (ctx.body = {
-				code: 8003,
-				message: "Server error",
-			});
-		}
-	});
+	try {
+		await Notifications.add({ message, uid, pid, type });
+		return (ctx.body = {
+			code: 8888,
+			message: "successful",
+		});
+	} catch (error) {
+		return (ctx.body = {
+			code: 8003,
+			message: "Server error",
+		});
+	}
 });
 
 /**
@@ -65,21 +47,12 @@ router.get("/find", async (ctx) => {
 			message: "Please enter the correct field or value!",
 		});
 	}
-	let option = {
-		attributes: ["id", "message", "type", "object_id"],
-		offset: 10 * (page - 1),
-		limit: 10,
-		include: {
-			model: NotificationTermUser,
-			as: "read",
-			attributes: ["status"],
-			where: {
-				uid,
-			},
-		},
-	};
+
 	try {
-		let res = await Notifications.findAll(option);
+		let res = await Notifications.find({
+			uid,
+			page,
+		});
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",
@@ -107,17 +80,8 @@ router.get("/update", async (ctx) => {
 			message: "Please enter the correct field or value!",
 		});
 	}
-	let option = {
-			status: 1,
-		},
-		whereOp = {
-			where: { uid },
-		};
-	if (!all) {
-		whereOp.where.note_id = noteId;
-	}
 	try {
-		await NotificationTermUser.update(option, whereOp);
+		await Notifications.update({ uid, noteId, all });
 		return (ctx.body = {
 			code: 8888,
 			message: "successful",

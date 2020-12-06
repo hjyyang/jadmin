@@ -5,18 +5,13 @@
 				<i class="iconfont icon-user1"></i>
 			</div>
 			<div class="signin_main" @keyup.enter="submitForm('loginForm')">
+				<div class="icon"><i class="iconfont icon-user"></i></div>
 				<el-form :model="loginForm" :rules="loginRules" ref="loginForm">
 					<el-form-item prop="userName">
 						<el-input v-model="loginForm.userName" placeholder="用户名"></el-input>
 					</el-form-item>
 					<el-form-item prop="pass">
-						<el-input
-							type="password"
-							v-model="loginForm.pass"
-							show-password
-							placeholder="密码"
-							autocomplete="off"
-						></el-input>
+						<el-input type="password" v-model="loginForm.pass" show-password placeholder="密码" autocomplete="off"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button @click="submitForm('loginForm')" type="primary">登入</el-button>
@@ -117,12 +112,22 @@ export default {
 	display: flex;
 	align-items: center;
 	min-height: calc(100vh);
+	.icon {
+		text-align: center;
+		margin-bottom: 20px;
+		color: #57a3f3;
+		.iconfont {
+			font-size: 50px;
+		}
+	}
 	.signin_container {
-		max-width: 360px;
+		max-width: 420px;
 		width: 100%;
 		margin: 0 auto;
 		padding-bottom: 8px;
 		box-sizing: border-box;
+		background-color: #fff;
+		border-radius: 5px;
 		overflow: hidden;
 	}
 	.signin_head {
@@ -141,18 +146,18 @@ export default {
 	button {
 		width: 100%;
 		margin-top: 20px;
-		background: var(--btn);
-		border-color: var(--btn);
+		// background: var(--btn);
+		// border-color: var(--btn);
 		transition: all 0.3s;
-		&:hover,
-		&:focus {
-			background: none;
-			border-color: var(--btn);
-			color: var(--btn);
-		}
+		// &:hover,
+		// &:focus {
+		// 	background: none;
+		// 	border-color: var(--btn);
+		// 	color: var(--btn);
+		// }
 	}
-	.el-input__inner:focus {
-		border-color: var(--border);
-	}
+	// .el-input__inner:focus {
+	// 	border-color: var(--border);
+	// }
 }
 </style>

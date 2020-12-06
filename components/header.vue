@@ -28,24 +28,6 @@
 											<div class="time">2019-05-08 14:33:18</div>
 										</div>
 									</div>
-									<div class="row">
-										<div class="icon join">
-											<i class="el-icon-user-solid"></i>
-										</div>
-										<div class="content">
-											<div class="info">有人加入啦</div>
-											<div class="time">2019-05-08 14:33:18</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="icon warning">
-											<i class="el-icon-warning"></i>
-										</div>
-										<div class="content">
-											<div class="info">系统报警</div>
-											<div class="time">2019-05-08 14:33:18</div>
-										</div>
-									</div>
 									<div class="more">加载更多</div>
 								</div>
 							</transition>

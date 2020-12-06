@@ -7,20 +7,33 @@
 				<div class="col">内容</div>
 			</div>
 			<template v-if="tableData !== {}">
-				<div class="item" :class="{ read: item.child.length == 0 }" v-for="item in tableData" :key="item.main.id">
+				<div class="item" :class="{ read: !item.main.read }" v-for="item in tableData" :key="item.main.id">
 					<div class="col">{{ $tool.dateFormat(new Date(item.main.createdAt)) }}</div>
 					<div class="col">{{ item.main.username }}</div>
 					<div class="col">{{ item.main.content }}</div>
-					<div class="col"><span @click="replyPopup(item)">回复</span></div>
+					<div class="col">
+						<span @click="replyPopup(item)">回复</span>
+						<el-dropdown @command="handleCommand">
+							<span class="el-dropdown-link">
+								更多
+								<i class="el-icon-arrow-down el-icon--right"></i>
+							</span>
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item command="read">已读</el-dropdown-item>
+								<el-dropdown-item command="delete">删除</el-dropdown-item>
+							</el-dropdown-menu>
+						</el-dropdown>
+					</div>
 				</div>
 			</template>
 			<div class="no_data" v-else>
 				暂无数据
 			</div>
 			<el-dialog title="回复" :visible.sync="dialogVisible" width="30%" class="edit-popup" :modal="false">
-				<el-input type="textarea" :autosize="{ minRows: 6, maxRows: 10 }" placeholder="请输入内容" v-model="currentReply.content"> </el-input>
+				<el-input type="textarea" :autosize="{ minRows: 6, maxRows: 10 }" placeholder="请输入内容" v-model="currentReply.child[0].content">
+				</el-input>
 				<div class="btn">
-					<el-button type="primary" size="mini" @click="handleReply">确定</el-button>
+					<el-button type="primary" size="mini" @click="handleReply(null)">确定</el-button>
 				</div>
 			</el-dialog>
 		</div>
@@ -34,7 +47,13 @@ export default {
 		return {
 			tableData: {},
 			dialogVisible: false,
-			currentReply: {},
+			currentReply: {
+				child: [
+					{
+						content: "",
+					},
+				],
+			},
 		};
 	},
 	created() {
@@ -42,10 +61,16 @@ export default {
 	},
 	methods: {
 		replyPopup(row) {
-			if (row.child.length !== 0) {
-				this.currentReply = row.child[0];
+			if (row.child.length > 0) {
+				this.currentReply = row;
 			} else {
-				this.currentReply = {};
+				this.currentReply = {
+					child: [
+						{
+							content: "",
+						},
+					],
+				};
 			}
 			this.dialogVisible = true;
 		},
@@ -54,9 +79,41 @@ export default {
 			if (res.data.code === 8888) {
 				this.tableData = res.data.leaveList;
 			}
+		},
+		async handleReply(rows) {
+			let row = null;
+			if (rows) {
+				row = rows;
+			} else {
+				row = this.currentReply;
+			}
+			console.log(row);
+		},
+		handleCommand(command) {
+			if (command == "delete") {
+				this.$confirm("确定删除该留言/评论？, 是否继续?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+					.then(() => {
+						this.$message({
+							type: "success",
+							message: "删除成功!",
+						});
+					})
+					.catch((error) => {
+						this.$message({
+							type: "info",
+							message: "已取消删除",
+						});
+					});
+			} else if (command == "read") {
+
+			}
         },
-        handleReply(){
-            console.log(this.currentReply)
+        async isEeply(){
+            
         }
 	},
 };
@@ -92,12 +149,20 @@ export default {
 			width: 140px;
 		}
 		&:nth-of-type(3) {
-			width: calc(100% - 340px);
+			width: calc(100% - 400px);
 		}
 		&:nth-of-type(4) {
-			width: 60px;
+			width: 120px;
 			margin-left: auto;
 			color: #409eff;
+			span {
+				margin: 0 auto;
+			}
+			i {
+				margin-left: -4px;
+				transform: scale(0.8);
+				font-size: 12px;
+			}
 		}
 		span {
 			cursor: pointer;

@@ -22,7 +22,12 @@ export default {
 			pageName: this.$route.name + "-page",
 			sideOPen: true,
 			notificattion: [],
+			user: null,
 		};
+	},
+	created() {
+		this.user = this.$store.state.authUser;
+		this.getNotification();
 	},
 	mounted() {
 		//挂载时修改body的class
@@ -65,10 +70,16 @@ export default {
 			} else {
 				this.sideOPen = false;
 			}
-        },
-        async getNotification(){
-            
-        }
+		},
+		async getNotification() {
+			let res = await this.$request.findNotification({
+				page: 1,
+				uid: this.user.u_id,
+			});
+			if (res.data.code === 8888) {
+				console.log(res.data.list);
+			}
+		},
 	},
 	watch: {
 		$route: {

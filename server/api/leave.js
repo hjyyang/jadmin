@@ -105,7 +105,8 @@ router.get("/list", async (ctx) => {
 			["os", "os"],
 			["province", "province"],
 			["city", "city"],
-			["username","username"],
+			["username", "username"],
+			["read", "read"],
 		],
 		raw: true,
 	};
@@ -159,4 +160,19 @@ router.get("/list", async (ctx) => {
 		});
 	}
 });
+
+/**
+ * 修改留言
+ * @param  {[string]} content     留言内容
+ * @param  {[number]} uid         用户id
+ * @param  {[number]} leaveId     留言id，如有则是回复留言
+ * @param  {[boolean]} read       是否已读
+ */
+router.post("/update", async (ctx) => {
+	let { content, uid, leaveId } = ctx.request.body;
+});
+
+function update() {
+    
+}
 module.exports = router;
