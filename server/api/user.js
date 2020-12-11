@@ -26,29 +26,28 @@ router.get("/list", async (ctx) => {
 			message: "Wrong parameter",
 		});
 	}
-	let offset = page - 1;
-	let dbRes = await User.findAndCountAll({
-		//查询并计数所有
+	let option = {
 		attributes: [
-			["id", "u_id"],
-			["name", "u_name"],
-			["email", "u_email"],
+			["id", "uid"],
+			["name", "name"],
+			["email", "email"],
 			["createdAt", "createdAt"],
-			["role", "u_role"],
+			["role", "role"],
 			["authEmail", "authEmail"],
-			["sex", "u_sex"],
-			["face", "u_face"],
+			["sex", "sex"],
+			["face", "face"],
 			["qq", "qq"],
 		],
-		offset: offset * 10,
+		offset: (page - 1) * 10,
 		limit: 10,
 		raw: true,
-	});
+	};
+	let dbRes = await User.findAndCountAll(option);
 
 	ctx.body = {
 		code: 8888,
 		message: "successful",
-		u_list: dbRes.rows,
+		list: dbRes.rows,
 		count: dbRes.count,
 	};
 });

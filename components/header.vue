@@ -12,42 +12,50 @@
 					<div class="notifications">
 						<div class="header">
 							<ul>
-								<li :class="{current: showTab==0}" @click="handleTab(0)">通知</li>
-								<li :class="{current: showTab==1}" @click="handleTab(1)">回复</li>
+								<li :class="{ current: showTab == 0 }" @click="handleTab(0)">通知</li>
+								<li :class="{ current: showTab == 1 }" @click="handleTab(1)">回复</li>
 							</ul>
 						</div>
 						<div class="main">
 							<transition :name="transitionName">
-								<div class="item" v-show="showTab==0">
-									<div class="row">
-										<div class="icon message">
-											<i class="el-icon-chat-dot-square"></i>
+								<div class="item" v-show="showTab == 0">
+									<template v-for="item in notificationList">
+										<div class="row" :key="item.id">
+											<div class="icon message">
+												<i class="el-icon-chat-dot-square"></i>
+											</div>
+											<div class="content">
+												<div class="info">{{ item.message }}</div>
+												<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
+											</div>
 										</div>
-										<div class="content">
-											<div class="info">有人回复你了</div>
-											<div class="time">2019-05-08 14:33:18</div>
-										</div>
+									</template>
+									<div class="more" :class="{ noMore: noMore1 }" v-if="notificationList.length > 0" @click="handleMore(noMore1)">
+										<i class="el-icon-loading" v-show="loading"></i> {{ noMore1 ? "没有更多数据了。。。" : "加载更多" }}
 									</div>
-									<div class="more">加载更多</div>
 								</div>
 							</transition>
 							<transition :name="transitionName">
-								<div class="item" v-show="showTab==1">
-									<div class="row">
-										<div class="icon message">
-											<i class="el-icon-chat-dot-square"></i>
+								<div class="item" v-show="showTab == 1">
+									<template v-for="item in replys">
+										<div class="row" :key="item.id">
+											<div class="icon message">
+												<i class="el-icon-chat-dot-square"></i>
+											</div>
+											<div class="content">
+												<div class="info">{{ item.message }}</div>
+												<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
+											</div>
 										</div>
-										<div class="content">
-											<div class="info">有人回复你了</div>
-											<div class="time">2019-05-08 14:33:18</div>
-										</div>
+									</template>
+									<div class="more" :class="{ noMore: noMore2 }" v-if="replys.length > 0" @click="handleMore(noMore2)">
+										<i class="el-icon-loading" v-show="loading"></i> {{ noMore2 ? "没有更多数据了。。。" : "加载更多" }}
 									</div>
+									<div class="no_data"></div>
 								</div>
 							</transition>
 						</div>
-						<div class="clear">
-							<i class="el-icon-delete-solid"></i> 清空
-						</div>
+						<div class="clear"><i class="el-icon-check"></i> 全部标记为已读</div>
 					</div>
 				</el-dropdown-menu>
 			</el-dropdown>
@@ -73,6 +81,12 @@ export default {
 			avatar: "",
 			showTab: 0,
 			transitionName: "",
+			notificationList: [],
+			replys: [],
+			page: 1,
+			noMore1: false,
+			noMore2: false,
+			loading: false,
 		};
 	},
 	props: {
@@ -80,6 +94,13 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		user: {
+			type: Object,
+			default: () => {},
+		},
+	},
+	created() {
+		this.getNotification();
 	},
 	methods: {
 		sideHide() {
@@ -116,6 +137,40 @@ export default {
 				this.transitionName = "tab-slide-right";
 			}
 			this.showTab = index;
+		},
+		async getNotification() {
+			let res = await this.$request.findNotification({
+				page: this.page,
+				uid: this.user.u_id,
+			});
+			if (res.data.code === 8888) {
+				console.log(res.data.list);
+				let data = res.data.list,
+					notes = 0,
+					replys = 0;
+				data.forEach((item) => {
+					if (item.type === 3) {
+						notes++;
+						this.notificationList.push(item);
+					} else {
+						replys++;
+						this.replys.push(item);
+					}
+				});
+				if (notes === 0) {
+					this.noMore1 = true;
+				}
+				if (replys === 0) {
+					this.noMore2 = true;
+				}
+			}
+		},
+		async handleMore(lock) {
+			if (lock) return false;
+			this.loading = true;
+			this.page++;
+			await this.getNotification();
+			this.loading = false;
 		},
 	},
 };
@@ -213,11 +268,11 @@ export default {
 	.main {
 		display: flex;
 		width: 200%;
-		max-height: 290px;
+		max-height: 360px;
 		overflow-y: scroll;
 	}
 	.item {
-		width: 50%;
+		width: 260px;
 	}
 	.row {
 		display: flex;
@@ -266,11 +321,16 @@ export default {
 		&:hover {
 			color: #8abef5;
 		}
+		&.noMore {
+			color: #b8b5b5;
+			cursor: default;
+		}
 	}
 	.clear {
 		height: 40px;
 		line-height: 40px;
 		text-align: center;
+		font-size: 12px;
 		color: #515a6e;
 		transition: all 0.3s;
 		cursor: pointer;

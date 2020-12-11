@@ -2,7 +2,7 @@
 	<div id="admin_layout">
 		<Side :open="sideOPen" />
 		<div class="main" :style="sideOPen ? 'padding-left: 64px;' : ''">
-			<Header @sideChange="sideChange" :open="sideOPen" />
+			<Header @sideChange="sideChange" :open="sideOPen" :user="user" />
 			<nuxt />
 		</div>
 	</div>
@@ -21,13 +21,11 @@ export default {
 		return {
 			pageName: this.$route.name + "-page",
 			sideOPen: true,
-			notificattion: [],
 			user: null,
 		};
 	},
 	created() {
 		this.user = this.$store.state.authUser;
-		this.getNotification();
 	},
 	mounted() {
 		//挂载时修改body的class
@@ -69,15 +67,6 @@ export default {
 				this.sideOPen = true;
 			} else {
 				this.sideOPen = false;
-			}
-		},
-		async getNotification() {
-			let res = await this.$request.findNotification({
-				page: 1,
-				uid: this.user.u_id,
-			});
-			if (res.data.code === 8888) {
-				console.log(res.data.list);
 			}
 		},
 	},
