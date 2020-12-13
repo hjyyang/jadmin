@@ -20,14 +20,20 @@
 							<transition :name="transitionName">
 								<div class="item" v-show="showTab == 0">
 									<template v-for="item in notificationList">
-										<div class="row" :key="item.id">
-											<div class="icon message">
-												<i class="el-icon-chat-dot-square"></i>
-											</div>
-											<div class="content">
-												<div class="info">{{ item.message }}</div>
-												<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
-											</div>
+										<div class="row" :key="item.id" :class="{ read: !item.read.status }">
+											<nuxt-link
+												:to="item.sort === noteSort.user ? '/users?_ea=' + item.id : item.sort === noteSort.warn ? '' : ''"
+												target="_blank"
+											>
+												<div class="icon" :class="{ warn: item.sort === noteSort.warn }">
+													<i class="el-icon-s-custom" v-if="item.sort === noteSort.user"></i>
+													<i class="el-icon-warning" v-else-if="item.sort === noteSort.warn"></i>
+												</div>
+												<div class="content">
+													<div class="info">{{ item.message }}</div>
+													<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
+												</div>
+											</nuxt-link>
 										</div>
 									</template>
 									<div class="more" :class="{ noMore: noMore1 }" v-if="notificationList.length > 0" @click="handleMore(noMore1)">
@@ -39,13 +45,15 @@
 								<div class="item" v-show="showTab == 1">
 									<template v-for="item in replys">
 										<div class="row" :key="item.id">
-											<div class="icon message">
-												<i class="el-icon-chat-dot-square"></i>
-											</div>
-											<div class="content">
-												<div class="info">{{ item.message }}</div>
-												<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
-											</div>
+											<nuxt-link to="">
+												<div class="icon message">
+													<i class="el-icon-chat-dot-square"></i>
+												</div>
+												<div class="content">
+													<div class="info">{{ item.message }}</div>
+													<div class="time">{{ $tool.dateFormat(new Date(item.createdAt)) }}</div>
+												</div>
+											</nuxt-link>
 										</div>
 									</template>
 									<div class="more" :class="{ noMore: noMore2 }" v-if="replys.length > 0" @click="handleMore(noMore2)">
@@ -87,6 +95,10 @@ export default {
 			noMore1: false,
 			noMore2: false,
 			loading: false,
+			noteSort: {
+				user: 1,
+				warn: 2,
+			},
 		};
 	},
 	props: {
@@ -177,6 +189,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../assets/style/variable.scss";
 #admin_header {
 	position: fixed;
 	width: calc(100% - 180px);
@@ -275,10 +288,15 @@ export default {
 		width: 260px;
 	}
 	.row {
-		display: flex;
-		align-items: center;
-		padding: 10px;
 		border-bottom: 1px solid #e4e4e4;
+		&.read {
+			background-color: rgba($color: #57a3f3, $alpha: 0.16);
+		}
+		a {
+			display: flex;
+			align-items: center;
+			padding: 10px;
+		}
 	}
 	.icon {
 		width: 32px;
@@ -289,10 +307,10 @@ export default {
 		text-align: center;
 		background-color: rgb(51, 145, 229);
 		color: #ffffff;
-		&.warning {
+		&.warn {
 			line-height: normal;
 			background: none;
-			color: rgb(243, 23, 23);
+			color: rgb(226, 64, 64);
 			i {
 				margin-left: -2px;
 				font-size: 34px;
@@ -300,9 +318,11 @@ export default {
 		}
 	}
 	.content {
+		width: calc(100% - 32px);
 		color: #515a6e;
 		.info {
 			margin-bottom: 4px;
+			@include elps-wrap(1);
 		}
 		.time {
 			font-size: 12px;

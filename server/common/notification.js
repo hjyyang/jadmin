@@ -40,7 +40,11 @@ class Notification {
 	 */
 	async find(option) {
 		let options = {
-			attributes: ["id", "message", "type", ["object_id", "note"], "createdAt"],
+			order: [
+				//倒序排列createdAt数据
+				["createdAt", "DESC"],
+			],
+			attributes: ["id", "message", "type", ["object_id", "note"], "createdAt", "sort"],
 			offset: 10 * (option.page - 1),
 			limit: 10,
 			include: {

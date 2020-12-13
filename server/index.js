@@ -53,7 +53,7 @@ async function start() {
 				if (ctx.url === "/test") {
 					return "*"; // 允许来自所有域名请求
 				}
-				return "http://localhost:8081"; //只允许http://localhost:8081这个域名的请求
+				return "http://localhost:3000"; //只允许http://localhost:8081这个域名的请求
 			},
 			maxAge: 5, //指定本次预检请求的有效期，单位为秒。
 			credentials: true, //是否允许发送Cookie

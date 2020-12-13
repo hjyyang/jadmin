@@ -109,12 +109,9 @@ export default {
 						});
 					});
 			} else if (command == "read") {
-
 			}
-        },
-        async isEeply(){
-            
-        }
+		},
+		async isEeply() {},
 	},
 };
 </script>

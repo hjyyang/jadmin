@@ -290,6 +290,8 @@ let Notifications = sequelize.define(
 		message: Sequelize.STRING,
 		type: Sequelize.INTEGER,
 		object_id: Sequelize.INTEGER,
+		createdAt: Sequelize.DATE,
+		sort: Sequelize.INET,
 	},
 	{
 		timestamps: false,
