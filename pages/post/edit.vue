@@ -25,7 +25,14 @@
 			</div>
 		</header>
 		<main>
-			<JEditor :hljs="hljs" :languages="languages" v-model="postData.content" @input="contentChange"></JEditor>
+			<JEditor
+				:hljs="hljs"
+				:languages="languages"
+				v-model="postData.content"
+				@input="contentChange"
+				:imageComplete="handleImage"
+				ref="editor"
+			></JEditor>
 		</main>
 		<MediaPopup :dialogVisible.sync="mediaVisible" :on-select="fileSelect" />
 		<el-drawer :visible.sync="drawerVisible" direction="rtl" size="24%" class="edit_drawer">
@@ -84,6 +91,7 @@ export default {
 			pathId: 0,
 			saveState: false,
 			mediaVisible: false,
+			whoFile: 0, //0为编辑器图片，1为海报图图片
 		};
 	},
 	methods: {
@@ -213,13 +221,28 @@ export default {
 		},
 		//添加海报图
 		addCover() {
+			this.whoFile = 1;
 			this.mediaVisible = true;
 		},
 		//选择文件
 		fileSelect(file) {
-			this.postData.coverImage = file.url;
-			this.mediaVisible = false;
-			this.contentChange();
+			if (this.whoFile == 0) {
+				//将媒体弹窗选择的文件url插入到编辑器中
+				this.$refs.editor.insertText({
+					prefix: "![",
+					subfix: ")",
+					str: "](" + file.url,
+				});
+				this.mediaVisible = false;
+			} else {
+				this.postData.coverImage = file.url;
+				this.mediaVisible = false;
+				this.contentChange();
+			}
+		},
+		handleImage() {
+			this.whoFile = 0;
+			this.mediaVisible = true;
 		},
 	},
 	async created() {
